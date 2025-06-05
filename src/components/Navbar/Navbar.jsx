@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { CakeSlice, HousePlus, Leaf, Menu, Refrigerator, ShoppingCart, UtensilsCrossed, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { CakeSlice, HousePlus, Leaf, Menu, Refrigerator, UtensilsCrossed, X } from 'lucide-react';
 import { NavLink } from 'react-router';
 
 const Navbar = () => {
@@ -15,25 +14,18 @@ const Navbar = () => {
 
                 {/* Logo & Title */}
                 <div className="flex items-center space-x-3 flex-shrink-0">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-full shadow-md bg-gradient-to-br from-emerald-200 via-emerald-400 to-emerald-300 flex items-center justify-center overflow-hidden">
-                        <img src="/img/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+                    <div className="group">
+                        <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+                            <img src="/img/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
+                        </div>
                     </div>
+
                     <div className="flex flex-col">
                         <div className="flex items-center space-x-1">
-                            <span className="text-lg md:text-2xl font-semibold text-emerald-800">
-                                Track<span className="text-emerald-600"><i>N</i></span>Fresh
+                            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 bg-clip-text text-transparent tracking-tight">
+                                Track<span className="text-emerald-400"><i>N</i></span>Fresh
                             </span>
-                            <motion.div
-                                animate={{ y: [0, -10, 0] }}
-                                transition={{
-                                    duration: 1,
-                                    ease: "easeInOut",
-                                    repeat: Infinity,
-                                    repeatType: "loop"
-                                }}
-                            >
-                                <Leaf className="w-6 h-6 md:w-8 md:h-7 text-emerald-500" />
-                            </motion.div>
+                            <Leaf className="w-6 h-6 md:w-8 md:h-7 text-emerald-500 animate-bounce" />
                         </div>
                         <span className="text-xs md:text-sm text-emerald-800">Stay Fresh, Waste Less</span>
                     </div>
@@ -68,10 +60,10 @@ const Navbar = () => {
 
                     {/* Action Buttons */}
                     <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 w-full md:w-auto">
-                        <button className="w-full md:w-auto text-sm md:text-base bg-gradient-to-r from-emerald-400 to-emerald-600 text-white font-semibold px-5 py-2 rounded-xl shadow-md hover:from-emerald-500 hover:to-emerald-700 transition-colors duration-300">
+                        <button className="w-full md:w-auto text-sm md:text-base bg-gradient-to-r from-emerald-500 to-teal-600  text-white font-semibold px-5 py-2 rounded-xl shadow-md hover:from-emerald-500 hover:to-emerald-700 transition-colors duration-300 cursor-pointer">
                             Login
                         </button>
-                        <button className="w-full md:w-auto text-sm md:text-base bg-white border border-emerald-500 text-emerald-600 font-semibold px-5 py-2 rounded-xl hover:bg-gradient-to-r hover:from-emerald-100 hover:to-emerald-200 transition-colors duration-300">
+                        <button className="w-full md:w-auto text-sm md:text-base bg-white border border-emerald-500 text-emerald-600 font-semibold px-5 py-2 rounded-xl hover:bg-gradient-to-r hover:from-emerald-100 hover:to-emerald-200 transition-colors duration-300 cursor-pointer">
                             Register
                         </button>
                     </div>
