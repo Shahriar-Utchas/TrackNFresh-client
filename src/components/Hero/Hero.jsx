@@ -56,23 +56,23 @@ const Hero = () => {
                         }`}
                 >
                     <div className="flex flex-col lg:flex-row-reverse h-full w-full">
-                        {/* Image (responsive on all devices) */}
+                        {/* Image  */}
                         <div className="w-full lg:w-1/2 h-64 sm:h-96 lg:h-full relative">
                             <div
                                 className="w-full h-full bg-cover bg-center"
                                 style={{ backgroundImage: `url(${slide.image})` }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent lg:bg-gradient-to-r lg:from-white lg:via-emerald-900/20" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/60 to-transparent lg:bg-gradient-to-r lg:from-base-100 lg:via-emerald-900/20" />
                             </div>
                         </div>
 
                         {/* Content */}
-                        <div className="flex items-center justify-center w-full lg:w-1/2 px-6 py-8 sm:px-10 lg:px-14">
+                        <div className="flex items-center justify-center w-full lg:w-1/2 px-6 py-8 sm:px-10 lg:px-14 bg-base-100">
                             <div className="max-w-3xl text-center lg:text-left animate-fade-in">
                                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 text-sm font-semibold mb-4">
                                     <Zap className="w-4 h-4 mr-2" /> Smart Kitchen Technology
                                 </div>
-                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                                     {slide.title}
                                 </h1>
                                 <p className="text-lg md:text-xl text-emerald-600 mb-4 font-medium">{slide.subtitle}</p>
