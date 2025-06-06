@@ -6,21 +6,21 @@ const slides = [
         subtitle: "Never waste food again with intelligent tracking",
         description: "Track expiry dates, get timely reminders, and make the most of every ingredient in your kitchen.",
         cta: "Start Tracking",
-        image: "../../../public/img/slide1.jpeg"
+        image: "img/slide1.jpeg"
     },
     {
         title: "Reduce Food Waste by 70%",
         subtitle: "AI-powered notifications for optimal freshness",
         description: "Get smart alerts before food expires and discover new recipes to use ingredients at their peak.",
         cta: "Get Started",
-        image: "../../../public/img/slide2.jpeg"
+        image: "img/slide2.jpeg"
     },
     {
         title: "Organize Your Kitchen",
         subtitle: "Intuitive categorization for easy access",
         description: "Transform your kitchen into a well-organized space with intuitive categorization.",
         cta: "Join Now",
-        image: "../../../public/img/slide3.jpg"
+        image: "public/img/slide3.jpg"
     }
 ];
 
