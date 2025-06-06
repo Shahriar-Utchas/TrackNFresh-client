@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CakeSlice, HousePlus, Leaf, Menu, Refrigerator, UtensilsCrossed, X } from 'lucide-react';
 import { NavLink } from 'react-router';
 import ToggleTheme from '../ToggleTheme/ToggleTheme';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 10);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const navLinkClass = ({ isActive }) =>
         `flex items-center gap-1 transition ${isActive ? 'text-emerald-600 underline underline-offset-8' : 'text-base-content hover:text-emerald-600'}`;
 
     return (
-        <nav className="w-full px-4 md:px-6 py-3 shadow-sm bg-base-100">
+        <nav
+            className={`w-full px-4 md:px-6 py-3 z-50 transition-all duration-300 ${
+                scrolled
+                    ? 'fixed top-0 left-0 bg-base-100/70 backdrop-blur-md shadow-md'
+                    : 'bg-base-100'
+            }`}
+        >
             <div className="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap items-center justify-between gap-4">
-
                 {/* Logo & Title */}
                 <div className="flex items-center space-x-3 flex-shrink-0">
                     <div className="group">
@@ -40,7 +56,6 @@ const Navbar = () => {
 
                 {/* Navigation & Buttons */}
                 <div className={`w-full md:w-auto flex-col md:flex md:flex-row md:items-center justify-between md:flex-1 mt-4 md:mt-0 ${menuOpen ? 'flex' : 'hidden md:flex'} gap-4`}>
-
                     {/* Nav Links */}
                     <div className="flex flex-col md:flex-row md:justify-center md:flex-1 items-center gap-3 md:gap-8">
                         <NavLink to="/" className={navLinkClass}>
@@ -49,10 +64,10 @@ const Navbar = () => {
                         <NavLink to="/fridge" className={navLinkClass}>
                             <Refrigerator className="w-5 h-5" />Fridge
                         </NavLink>
-                        <NavLink to="/fridge" className={navLinkClass}>
+                        <NavLink to="/add-food" className={navLinkClass}>
                             <CakeSlice className="w-5 h-5" />Add Food
                         </NavLink>
-                        <NavLink to="/fridge" className={navLinkClass}>
+                        <NavLink to="/my-items" className={navLinkClass}>
                             <UtensilsCrossed className="w-5 h-5" />My Items
                         </NavLink>
                     </div>
