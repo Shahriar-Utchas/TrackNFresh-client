@@ -11,8 +11,8 @@ const Home = () => {
             <Hero />
             <ExpiringItem />
             <ExpiredItem />
-            <FoodTips />
             <WhyFreshNTrack />
+            <FoodTips />
         </div>
     );
 };
