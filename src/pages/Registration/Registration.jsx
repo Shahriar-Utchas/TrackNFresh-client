@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import Lottie from 'lottie-react';
 import registrationAnimation from '../../../public/lottie-animation/registration-animation.json';
+import { AuthContext } from '../../Provider/AuthContext';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 const Registration = () => {
+    const { user, SetUser, handleGoogleLogin } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            navigate(location?.state || '/');
+        }
+    }, [user, navigate]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -72,7 +89,19 @@ const Registration = () => {
     };
 
     const handleGoogleRegister = () => {
-        console.log('Google register clicked');
+        setLoading(true);
+        handleGoogleLogin()
+            .then((result) => {
+                SetUser(result.user);
+                setLoading(false);
+                toast.success('Registration successful!');
+                navigate('/');
+            })
+            .catch((error) => {
+                setLoading(false);
+                toast.error('Registration failed. Please try again.');
+                console.error('Google Registration error:', error);
+            });
     };
 
     return (
@@ -192,7 +221,7 @@ const Registration = () => {
                                 alt="Google"
                                 className="w-5 h-5"
                             />
-                            <span className=" font-medium">Register with Google</span>
+                            <span className=" font-medium">{loading ? 'Registering...' : 'Register with Google'}</span>
                         </button>
                     </form>
 

@@ -1,14 +1,42 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import loginAnimation from '../../../public/lottie-animation/login-animation.json';
 import Lottie from 'lottie-react';
+import { AuthContext } from '../../Provider/AuthContext';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { user, SetUser, handleGoogleLogin } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
-    // Implement your Google login logic here
-    console.log('Google login clicked');
+  useEffect(() => {
+    if (user) {
+      navigate(location?.state || '/');
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+
+  const GoogleLoginClick = () => {
+    setLoading(true);
+    handleGoogleLogin()
+      .then((result) => {
+        SetUser(result.user);
+        setLoading(false);
+        toast.success('Login successful!');
+        navigate('/');
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error('Login failed. Please try again.');
+        console.error('Google login error:', error);
+      });
   };
 
   return (
@@ -56,7 +84,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
 
             <div className="flex items-center justify-center gap-2 text-sm">
@@ -67,7 +95,7 @@ const Login = () => {
 
             <button
               type="button"
-              onClick={handleGoogleLogin}
+              onClick={GoogleLoginClick}
               className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-200 hover:text-black cursor-pointer transition"
             >
               <img
@@ -75,7 +103,7 @@ const Login = () => {
                 alt="Google"
                 className="w-5 h-5"
               />
-              <span className=" font-medium">Login with Google</span>
+              <span className=" font-medium">{loading ? 'Logging in...' : 'Login with Google'}</span>
             </button>
           </form>
 

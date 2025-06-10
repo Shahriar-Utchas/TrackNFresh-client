@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { CakeSlice, HousePlus, Leaf, Menu, Refrigerator, UtensilsCrossed, X } from 'lucide-react';
 import { Link, NavLink } from 'react-router';
 import ToggleTheme from '../ToggleTheme/ToggleTheme';
+import { AuthContext } from '../../Provider/AuthContext';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+    const { user, logout } = useContext(AuthContext);
+    const profileMenuRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -14,6 +19,17 @@ const Navbar = () => {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Close profile dropdown if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+                setProfileMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const navLinkClass = ({ isActive }) =>
@@ -55,13 +71,23 @@ const Navbar = () => {
                     </button>
                 </div>
 
-                {/* Theme Toggle if in mobile show  */}
-                <div className="block md:hidden">
+                {/* Theme Toggle if in mobile show */}
+                <div className=" md:hidden flex gap-2">
                     <ToggleTheme />
+                    {user && (
+                        <img
+                            src={user?.photoURL || '/img/default-profile.png'}
+                            alt="User Profile"
+                            className="w-10 h-10 rounded-full object-cover border-2 border-emerald-500 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                        />
+                    )}
                 </div>
 
                 {/* Navigation & Buttons */}
-                <div className={`w-full md:w-auto flex-col md:flex md:flex-row md:items-center justify-between md:flex-1 mt-4 md:mt-0 ${menuOpen ? 'flex' : 'hidden md:flex'} gap-4`}>
+                <div
+                    className={`w-full md:w-auto flex-col md:flex md:flex-row md:items-center justify-between md:flex-1 mt-4 md:mt-0 ${menuOpen ? 'flex' : 'hidden md:flex'
+                        } gap-4`}
+                >
                     {/* Nav Links */}
                     <div className="flex flex-col md:flex-row md:justify-center md:flex-1 items-center gap-3 md:gap-8">
                         <NavLink to="/" className={navLinkClass}>
@@ -70,28 +96,73 @@ const Navbar = () => {
                         <NavLink to="/fridge" className={navLinkClass}>
                             <Refrigerator className="w-5 h-5" />Fridge
                         </NavLink>
-                        <NavLink to="/add-food" className={navLinkClass}>
-                            <CakeSlice className="w-5 h-5" />Add Food
-                        </NavLink>
-                        <NavLink to="/my-items" className={navLinkClass}>
-                            <UtensilsCrossed className="w-5 h-5" />My Items
-                        </NavLink>
+                        {user && (
+                            <NavLink to="/add-food" className={navLinkClass}>
+                                <CakeSlice className="w-5 h-5" />Add Food
+                            </NavLink>
+                        )}
+                        {user && (
+                            <NavLink to="/my-items" className={navLinkClass}>
+                                <UtensilsCrossed className="w-5 h-5" />My Items
+                            </NavLink>
+                        )}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 w-full md:w-auto">
-                        <Link to={'/login'} className='w-full md:w-auto'>
-                            <button className="w-full md:w-auto text-sm md:text-base bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold px-5 py-2 rounded-xl shadow-md hover:from-emerald-600 hover:to-teal-700 transition-colors duration-300 cursor-pointer">
-                                Login
-                            </button>
-                        </Link>
-                        <Link to={'/register'} className='w-full md:w-auto'>
-                            <button className="w-full md:w-auto text-sm md:text-base bg-base-100 border border-green-600 text-green-700 font-semibold px-5 py-2 rounded-xl hover:bg-green-100/30 dark:hover:bg-green-900/20 transition-colors duration-300 cursor-pointer">
-                                Register
-                            </button>
-                        </Link>
+                    {/* Auth Buttons or User Profile */}
+                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 w-full md:w-auto relative">
+                        {!user ? (
+                            <>
+                                <Link to={'/login'} className="w-full md:w-auto">
+                                    <button className="w-full md:w-auto text-sm md:text-base bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold px-5 py-2 rounded-xl shadow-md hover:from-emerald-600 hover:to-teal-700 transition-colors duration-300 cursor-pointer">
+                                        Login
+                                    </button>
+                                </Link>
+                                <Link to={'/register'} className="w-full md:w-auto">
+                                    <button className="w-full md:w-auto text-sm md:text-base bg-base-100 border border-green-600 text-green-700 font-semibold px-5 py-2 rounded-xl hover:bg-green-100/30 dark:hover:bg-green-900/20 transition-colors duration-300 cursor-pointer">
+                                        Register
+                                    </button>
+                                </Link>
+                            </>
+                        ) : (
+                            <div className="relative" ref={profileMenuRef}>
+                                <button
+                                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                                    className="flex items-center space-x-2 focus:outline-none"
+                                    aria-haspopup="true"
+                                    aria-expanded={profileMenuOpen}
+                                >
+                                    <div className="hidden md:block relative group">
+                                        <img
+                                            src={user?.photoURL || '/img/default-profile.png'}
+                                            alt="User Profile"
+                                            className="w-10 h-10 rounded-full object-cover border-2 border-emerald-500 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                                        />
+                                        <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 bg-neutral text-neutral-content text-xs px-3 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition z-50">
+                                            {user.displayName || 'User'}
+                                        </div>
+                                    </div>
+
+                                </button>
+
+                                {/* Dropdown Menu */}
+                                {profileMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-36 bg-base-100 border border-gray-200 rounded-lg shadow-lg z-50 py-1">
+                                        <button
+                                            onClick={() => {
+                                                logout();
+                                                setProfileMenuOpen(false);
+                                            }}
+                                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 transition-colors rounded-md"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
+
                 {/* Theme Toggle Button if only pc*/}
                 <div className="hidden md:block">
                     <ToggleTheme />
