@@ -55,6 +55,11 @@ const Navbar = () => {
                     </button>
                 </div>
 
+                {/* Theme Toggle if in mobile show  */}
+                <div className="block md:hidden">
+                    <ToggleTheme />
+                </div>
+
                 {/* Navigation & Buttons */}
                 <div className={`w-full md:w-auto flex-col md:flex md:flex-row md:items-center justify-between md:flex-1 mt-4 md:mt-0 ${menuOpen ? 'flex' : 'hidden md:flex'} gap-4`}>
                     {/* Nav Links */}
@@ -75,19 +80,22 @@ const Navbar = () => {
 
                     {/* Action Buttons */}
                     <div className="flex flex-col md:flex-row items-center gap-2 md:gap-3 w-full md:w-auto">
-                        <Link to={'/login'}>
+                        <Link to={'/login'} className='w-full md:w-auto'>
                             <button className="w-full md:w-auto text-sm md:text-base bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold px-5 py-2 rounded-xl shadow-md hover:from-emerald-600 hover:to-teal-700 transition-colors duration-300 cursor-pointer">
                                 Login
                             </button>
                         </Link>
-                        <Link to={'/register'}>
+                        <Link to={'/register'} className='w-full md:w-auto'>
                             <button className="w-full md:w-auto text-sm md:text-base bg-base-100 border border-green-600 text-green-700 font-semibold px-5 py-2 rounded-xl hover:bg-green-100/30 dark:hover:bg-green-900/20 transition-colors duration-300 cursor-pointer">
                                 Register
                             </button>
                         </Link>
                     </div>
                 </div>
-                <ToggleTheme />
+                {/* Theme Toggle Button if only pc*/}
+                <div className="hidden md:block">
+                    <ToggleTheme />
+                </div>
             </div>
         </nav>
     );
