@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { user, SetUser, handleGoogleLogin } = useContext(AuthContext);
+  const { user, SetUser, loginWithEmail, handleGoogleLogin } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -22,7 +22,29 @@ const Login = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  // Handle login form submission
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
 
+    setLoading(true);
+    loginWithEmail(email, password)
+      .then((result) => {
+        SetUser(result.user);
+        setLoading(false);
+        toast.success('Login successful!');
+        navigate('/');
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error('Login failed. Please check your credentials and try again.');
+        console.error('Login error:', error);
+      });
+  }
+
+  // Google login handler
   const GoogleLoginClick = () => {
     setLoading(true);
     handleGoogleLogin()
@@ -55,10 +77,11 @@ const Login = () => {
             <p className="text-gray-500">Please login to your account</p>
           </div>
 
-          <form className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <input
                 type="email"
+                name="email"
                 placeholder="Email *"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -68,6 +91,7 @@ const Login = () => {
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                name="password"
                 placeholder="Password *"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
 const Registration = () => {
-    const { user, SetUser, handleGoogleLogin } = useContext(AuthContext);
+    const { user, createUser, SetUser, handleGoogleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
@@ -71,6 +71,7 @@ const Registration = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true);
 
         const passwordError = validatePassword(formData.password);
         const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
@@ -81,11 +82,27 @@ const Registration = () => {
         });
 
         if (passwordError || confirmPasswordError) {
-            console.log('Validation failed');
             return;
         }
 
-        console.log('Registration successful', formData);
+        //register 
+        createUser(formData.email, formData.password, formData.name, formData.photoURL)
+            .then((result) => {
+                SetUser(result.user);
+                setLoading(false);
+                toast.success('Registration successful!');
+                SetUser({
+                    displayName: formData.name,
+                    email: formData.email,
+                    photoURL: formData.photoURL || 'https://www.paralysistreatments.com/wp-content/uploads/2018/02/no_profile_img.png',
+                });
+                navigate('/');
+            })
+            .catch((error) => {
+                setLoading(false);
+                const cleanedMessage = error.message.replace(/^Firebase:\s*/, '');
+                toast.error(cleanedMessage);
+            });
     };
 
     const handleGoogleRegister = () => {
@@ -202,7 +219,7 @@ const Registration = () => {
                             type="submit"
                             className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
                         >
-                            Register
+                            {loading ? 'Registering...' : 'Register'}
                         </button>
 
                         <div className="flex items-center justify-center gap-2 text-sm">
