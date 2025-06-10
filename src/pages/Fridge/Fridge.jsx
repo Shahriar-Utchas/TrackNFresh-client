@@ -37,7 +37,7 @@ const Fridge = () => {
   const paginatedItems = filteredItems.slice(startIndex, startIndex + itemsPerPage);
 
   useEffect(() => {
-    setCurrentPage(1); 
+    setCurrentPage(1);
   }, [search, category, sortOrder]);
 
   const getDaysLeft = (expiry) => {

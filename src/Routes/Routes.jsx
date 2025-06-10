@@ -4,6 +4,8 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import Registration from "../pages/Registration/Registration";
 import Fridge from "../pages/Fridge/Fridge";
+import AddFood from "../pages/AddFood/AddFood";
+import MyItem from "../pages/MyItem/MyItem";
 
 export const router = createBrowserRouter([
     {
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
             {
                 path: "fridge",
                 Component: Fridge,
+            },
+            {
+                path: "add-food",
+                Component: AddFood,
+            },
+            {
+                path: "my-items",
+                Component: MyItem,
             }
         ]
     },
