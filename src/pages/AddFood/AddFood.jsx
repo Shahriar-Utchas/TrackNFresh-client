@@ -1,11 +1,12 @@
 import { Plus } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthContext";
-import axios from "axios";
 import toast from "react-hot-toast";
+import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const AddFood = () => {
     const { user } = useContext(AuthContext);
+    const axiosSecure = UseAxiosSecure();
     const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
@@ -24,7 +25,7 @@ const AddFood = () => {
             AddedDate: new Date().toISOString().split("T")[0],
         };
         // Send the food item to the server
-        axios.post("http://localhost:3000/food/add", foodItem)
+        axiosSecure.post("/food/add", foodItem,)
             .then((response) => {
                 if (response.data.acknowledged) {
                     setIsCreating(false);
@@ -63,7 +64,7 @@ const AddFood = () => {
                                 <span className="label-text">Image URL</span>
                             </label>
                             <input
-                                type="text"
+                                type="url"
                                 name="imageUrl"
                                 placeholder="Enter image URL"
                                 className="input input-bordered w-full"
