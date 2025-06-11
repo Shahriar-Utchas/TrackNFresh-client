@@ -3,11 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthContext";
 import toast from "react-hot-toast";
 import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
+import { useNavigate } from "react-router";
 
 const AddFood = () => {
     const { user } = useContext(AuthContext);
     const axiosSecure = UseAxiosSecure();
     const [isCreating, setIsCreating] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -31,6 +33,8 @@ const AddFood = () => {
                     setIsCreating(false);
                     toast.success("Food item added successfully!");
                     e.target.reset();
+                    navigate("/my-items");
+
                 }
                 else {
                     setIsCreating(false);

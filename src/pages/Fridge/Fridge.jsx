@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Grid3X3, List } from "lucide-react";
-
-const foodItems = [
-  { id: 1, name: "Expired Cheese", category: "Dairy", quantity: "200g", expiry: "2024-06-07", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 2, name: "Fresh Spinach", category: "Vegetables", quantity: "250g", expiry: "2024-06-12", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 3, name: "Fresh Strawberries", category: "Fruits", quantity: "500g", expiry: "2024-06-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 4, name: "Whole Wheat Bread", category: "Bakery", quantity: "1 Loaf", expiry: "2025-07-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 5, name: "Whole Wheat Bread2", category: "Bakery", quantity: "1 Loaf", expiry: "2025-07-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 6, name: "Whole Wheat Bread3", category: "Bakery", quantity: "1 Loaf", expiry: "2025-07-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 7, name: "Whole Wheat Bread4", category: "Bakery", quantity: "1 Loaf", expiry: "2025-07-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-  { id: 8, name: "Whole Wheat Bread5", category: "Bakery", quantity: "1 Loaf", expiry: "2025-07-15", image: "https://images.unsplash.com/photo-1560807707-8cc77767d783" },
-];
+import { useLoaderData } from "react-router";
 
 const Fridge = () => {
+  const foodsData = useLoaderData();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
   const [view, setView] = useState("grid");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Categories");
@@ -23,14 +15,14 @@ const Fridge = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const filteredItems = foodItems
-    .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+  const filteredItems = foodsData
+    .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
     .filter((item) => category === "All Categories" || item.category === category)
     .sort((a, b) => {
       if (sortOrder === "asc") {
-        return new Date(a.expiry) - new Date(b.expiry);
+        return new Date(a.expiryDate) - new Date(b.expiryDate);
       } else if (sortOrder === "desc") {
-        return new Date(b.expiry) - new Date(a.expiry);
+        return new Date(b.expiryDate) - new Date(a.expiryDate);
       }
       return 0;
     });
@@ -55,6 +47,8 @@ const Fridge = () => {
     return date.toISOString().split("T")[0];
   };
 
+  const categories = Array.from(new Set(foodsData.map((item) => item.category)));
+
   return (
     <div className="p-6 text-base-content">
       <h1 className="text-3xl font-bold mb-1">My Fridge</h1>
@@ -76,10 +70,9 @@ const Fridge = () => {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option>All Categories</option>
-          <option value="Dairy">Dairy</option>
-          <option value="Vegetables">Vegetables</option>
-          <option value="Fruits">Fruits</option>
-          <option value="Bakery">Bakery</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
         </select>
 
         <select
@@ -109,35 +102,38 @@ const Fridge = () => {
       </div>
 
       {/* Content */}
-      {filteredItems.length === 0 ? (
-        <div className="text-center opacity-60 text-lg py-20">
-          No items found.
-        </div>
+      {foodsData.length === 0 ? (
+        <div className="text-center opacity-60 text-lg py-20">No items found.</div>
       ) : view === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {paginatedItems.map((item) => {
-            const daysLeft = getDaysLeft(item.expiry);
+            const daysLeft = getDaysLeft(item.expiryDate);
             return (
-              <div key={item.id} className="bg-base-100 rounded-2xl shadow-md overflow-hidden relative">
+              <div key={item._id} className="bg-base-100 rounded-2xl shadow-md overflow-hidden relative">
                 <div className="relative">
-                  <img src={item.image} alt={item.name} className="h-40 w-full object-cover" />
-                  {daysLeft <= 3 && (
-                    <span className="absolute top-2 right-2 bg-red-600 text-xs px-2 py-1 rounded-full flex items-center gap-1 text-white">
-                      <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L4.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      {daysLeft > 0 ? `${daysLeft} days left` : "Expired"}
-                    </span>
-                  )}
+                  <img
+                    src={item.imageUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png"}
+                    alt={item.title}
+                    className="h-40 w-full object-cover"
+                  />
+                  {/* {daysLeft <= 3 && ( */}
+                  <span className="absolute top-2 right-2 bg-red-600 text-xs px-2 py-1 rounded-full flex items-center gap-1 text-white">
+                    <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L4.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    {daysLeft > 0 ? `${daysLeft} days left` : "Expired"}
+                  </span>
+                  {/* )} */}
                 </div>
                 <div className="p-4">
-                  <h2 className="font-semibold text-lg mb-1">{item.name}</h2>
+                  <h2 className="font-semibold text-lg mb-1">{item.title}</h2>
                   <p className="text-sm"><strong>Quantity:</strong> {item.quantity}</p>
                   <p className="text-sm flex items-center gap-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 4h10M5 11h14M5 15h14M5 19h14" />
                     </svg>
-                    <strong>Expires:</strong> <span className="text-red-600">{formatDate(item.expiry)}</span>
+                    <strong>Expires:</strong>{" "}
+                    <span className="text-red-600">{formatDate(item.expiryDate)}</span>
                   </p>
                   <span className="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">
                     {item.category}
@@ -165,13 +161,21 @@ const Fridge = () => {
             </thead>
             <tbody>
               {paginatedItems.map((item) => (
-                <tr key={item.id} className="hover:bg-base-300">
-                  <td><img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" /></td>
-                  <td className="font-medium">{item.name}</td>
+                <tr key={item._id} className="hover:bg-base-300">
+                  <td>
+                    <img
+                      src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'}
+                      alt={item.title}
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                  </td>
+                  <td className="font-medium">{item.title}</td>
                   <td>{item.category}</td>
                   <td>{item.quantity}</td>
-                  <td className="text-red-600">{formatDate(item.expiry)}</td>
-                  <td><button className="btn btn-sm">See Details</button></td>
+                  <td className="text-red-600">{formatDate(item.expiryDate)}</td>
+                  <td>
+                    <button className="btn btn-sm">See Details</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -209,7 +213,7 @@ const Fridge = () => {
       )}
 
       <p className="text-sm text-right mt-4 opacity-70">
-        {filteredItems.filter((i) => getDaysLeft(i.expiry) <= 0).length} expired items
+        {filteredItems.filter((i) => getDaysLeft(i.expiryDate) <= 0).length} expired items
       </p>
     </div>
   );
