@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CircleAlert, Clock, Pencil, Sprout, Trash2 } from 'lucide-react';
 
 const items = [
@@ -23,6 +23,9 @@ const items = [
 ];
 
 const MyItem = () => {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
     return (
         <div className="p-6 bg-base-100 min-h-screen">
             {/* Header */}

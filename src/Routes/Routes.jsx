@@ -6,6 +6,7 @@ import Registration from "../pages/Registration/Registration";
 import Fridge from "../pages/Fridge/Fridge";
 import AddFood from "../pages/AddFood/AddFood";
 import MyItem from "../pages/MyItem/MyItem";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
     {
@@ -30,11 +31,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "add-food",
-                Component: AddFood,
+                element: <PrivateRoutes><AddFood></AddFood></PrivateRoutes>
             },
             {
                 path: "my-items",
-                Component: MyItem,
+                element: <PrivateRoutes><MyItem></MyItem></PrivateRoutes>
             }
         ]
     },

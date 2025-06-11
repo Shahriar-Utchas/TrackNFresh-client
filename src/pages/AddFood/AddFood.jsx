@@ -1,7 +1,10 @@
 import { Plus } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
 const AddFood = () => {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
     return (
         <div className="min-h-screen flex items-center justify-center bg-base-300 p-8">
             <div className="bg-base-100 p-8 rounded-xl shadow-md w-full max-w-xl">

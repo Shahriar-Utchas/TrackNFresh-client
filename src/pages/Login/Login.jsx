@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import loginAnimation from '../../../public/lottie-animation/login-animation.json';
 import Lottie from 'lottie-react';
 import { AuthContext } from '../../Provider/AuthContext';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -11,12 +11,22 @@ const Login = () => {
   const { user, SetUser, loginWithEmail, handleGoogleLogin } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const hasShownToast = useRef(false);
+
+  useEffect(() => {
+    if (location?.state && !hasShownToast.current) {
+      toast.error('You must log in to access that page.');
+      hasShownToast.current = true;
+    }
+  }, [location]);
 
   useEffect(() => {
     if (user) {
       navigate(location?.state || '/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -35,7 +45,7 @@ const Login = () => {
         SetUser(result.user);
         setLoading(false);
         toast.success('Login successful!');
-        navigate('/');
+        navigate(location?.state || '/');
       })
       .catch((error) => {
         setLoading(false);
@@ -52,7 +62,7 @@ const Login = () => {
         SetUser(result.user);
         setLoading(false);
         toast.success('Login successful!');
-        navigate('/');
+        navigate(location?.state || '/');
       })
       .catch((error) => {
         setLoading(false);

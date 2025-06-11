@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 import Footer from '../components/Footer/Footer';
 
 const Root = () => {
+    const [loading, setLoading] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setLoading(true);
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [location]);
     return (
         <>
             <Navbar></Navbar>
-            <Outlet></Outlet>
+            {loading ? <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+            </div> : <Outlet />}
             <Footer></Footer>
         </>
     );

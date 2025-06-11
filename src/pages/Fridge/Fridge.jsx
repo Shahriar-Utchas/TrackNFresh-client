@@ -13,6 +13,9 @@ const foodItems = [
 ];
 
 const Fridge = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const [view, setView] = useState("grid");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Categories");

@@ -3,19 +3,20 @@ import { Eye, EyeOff } from 'lucide-react';
 import Lottie from 'lottie-react';
 import registrationAnimation from '../../../public/lottie-animation/registration-animation.json';
 import { AuthContext } from '../../Provider/AuthContext';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
 const Registration = () => {
     const { user, createUser, SetUser, handleGoogleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (user) {
             navigate(location?.state || '/');
         }
-    }, [user, navigate]);
+    }, [user, navigate, location]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -96,7 +97,7 @@ const Registration = () => {
                     email: formData.email,
                     photoURL: formData.photoURL || 'https://www.paralysistreatments.com/wp-content/uploads/2018/02/no_profile_img.png',
                 });
-                navigate('/');
+                navigate(location?.state || '/');
             })
             .catch((error) => {
                 setLoading(false);
@@ -112,7 +113,7 @@ const Registration = () => {
                 SetUser(result.user);
                 setLoading(false);
                 toast.success('Registration successful!');
-                navigate('/');
+                navigate(location?.state || '/');
             })
             .catch((error) => {
                 setLoading(false);
