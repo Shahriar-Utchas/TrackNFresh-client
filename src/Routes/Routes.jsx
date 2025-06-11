@@ -15,6 +15,10 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
+                loader: () => fetch("http://localhost:3000/food/all"),
+                hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+                </div>,
                 Component: Home,
             },
             {

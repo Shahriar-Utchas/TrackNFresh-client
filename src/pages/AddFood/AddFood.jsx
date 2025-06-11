@@ -23,7 +23,7 @@ const AddFood = () => {
         const initial_foodItem = Object.fromEntries(formData.entries());
         const foodItem = {
             ...initial_foodItem,
-            groupCreatorEmail: user.email,
+            foodCreatorEmail: user.email,
             AddedDate: new Date().toISOString().split("T")[0],
         };
         // Send the food item to the server
