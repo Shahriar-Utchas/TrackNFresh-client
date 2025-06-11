@@ -1,10 +1,48 @@
 import { Plus } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../Provider/AuthContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddFood = () => {
+    const { user } = useContext(AuthContext);
+    const [isCreating, setIsCreating] = useState(false);
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, []);
+
+    // Handle form submission
+    const handleSubmit = (e) => {
+        setIsCreating(true);
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const initial_foodItem = Object.fromEntries(formData.entries());
+        const foodItem = {
+            ...initial_foodItem,
+            groupCreatorEmail: user.email,
+            AddedDate: new Date().toISOString().split("T")[0],
+        };
+        // Send the food item to the server
+        axios.post("http://localhost:3000/food/add", foodItem)
+            .then((response) => {
+                if (response.data.acknowledged) {
+                    setIsCreating(false);
+                    toast.success("Food item added successfully!");
+                    e.target.reset();
+                }
+                else {
+                    setIsCreating(false);
+                    toast.error("Failed to add food item. Please try again.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error adding food item:", error);
+                alert("An error occurred while adding the food item.");
+            });
+    };
+
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-base-300 p-8">
             <div className="bg-base-100 p-8 rounded-xl shadow-md w-full max-w-xl">
@@ -18,7 +56,7 @@ const AddFood = () => {
                     Keep track of your food and reduce waste
                 </p>
 
-                <form className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="label">
@@ -26,6 +64,7 @@ const AddFood = () => {
                             </label>
                             <input
                                 type="text"
+                                name="imageUrl"
                                 placeholder="Enter image URL"
                                 className="input input-bordered w-full"
                             />
@@ -36,6 +75,7 @@ const AddFood = () => {
                             </label>
                             <input
                                 type="text"
+                                name="title"
                                 placeholder="e.g., Fresh Apples"
                                 className="input input-bordered w-full"
                                 required
@@ -48,16 +88,22 @@ const AddFood = () => {
                             <label className="label">
                                 <span className="label-text">Category *</span>
                             </label>
-                            <select className="select select-bordered w-full" required>
-                                <option disabled selected>
+                            <select
+                                className="select select-bordered w-full"
+                                name="category"
+                                defaultValue=""
+                                required
+                            >
+                                <option value="" disabled>
                                     Select a category
                                 </option>
-                                <option>Fruits</option>
-                                <option>Vegetables</option>
-                                <option>Dairy</option>
-                                <option>Meat</option>
-                                <option>Snacks</option>
+                                <option value="Fruits">Fruits</option>
+                                <option value="Vegetables">Vegetables</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Meat">Meat</option>
+                                <option value="Snacks">Snacks</option>
                             </select>
+
                         </div>
                         <div>
                             <label className="label">
@@ -65,6 +111,7 @@ const AddFood = () => {
                             </label>
                             <input
                                 type="text"
+                                name="quantity"
                                 placeholder="e.g., 1 kg, 500g, 2 pieces"
                                 className="input input-bordered w-full"
                                 required
@@ -78,6 +125,7 @@ const AddFood = () => {
                         </label>
                         <input
                             type="date"
+                            name="expiryDate"
                             className="input input-bordered w-full"
                             required
                         />
@@ -89,13 +137,14 @@ const AddFood = () => {
                         </label>
                         <textarea
                             className="textarea textarea-bordered w-full"
+                            name="description"
                             rows={3}
                             placeholder="Add any additional notes about this food item..."
                         ></textarea>
                     </div>
 
                     <button className="btn btn-success w-full text-white text-base font-semibold">
-                        + Add Food Item
+                        {isCreating ? "Creating item..." : "+ Add Food Item"}
                     </button>
                 </form>
             </div>
