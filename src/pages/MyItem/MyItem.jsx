@@ -1,85 +1,133 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CircleAlert, Clock, Pencil, Sprout, Trash2 } from 'lucide-react';
+import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
+import { AuthContext } from '../../Provider/AuthContext';
+import { Link } from 'react-router';
+import Swal from 'sweetalert2';
 
-const items = [
-    {
-        id: 1,
-        name: 'Fresh Apples',
-        category: 'Fruits',
-        quantity: '2 kg',
-        expiry: '2024-06-15',
-        image: 'https://i.ibb.co/SmgGvKX/apples.jpg',
-        status: { text: '10 days left', colorClass: 'bg-green-100 text-green-700' },
-    },
-    {
-        id: 2,
-        name: 'Whole Milk',
-        category: 'Dairy',
-        quantity: '1 Liter',
-        expiry: '2024-06-07',
-        image: 'https://i.ibb.co/kqDF6Ff/milk.jpg',
-        status: { text: '2 days left', colorClass: 'bg-orange-100 text-orange-700' },
-    },
-];
 
 const MyItem = () => {
+    const axiosSecure = UseAxiosSecure();
+    const { user } = useContext(AuthContext);
+    const [myItems, setMyItems] = useState([]);
+
+    const [freshCount, setFreshCount] = useState(0);
+    const [expiringCount, setExpiringCount] = useState(0);
+    const [criticalCount, setCriticalCount] = useState(0);
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, []);
+
+        const fetchItems = async () => {
+            try {
+                const res = await axiosSecure.get(`/food/my-items?email=${user?.email}`);
+                const items = res.data;
+
+                const today = new Date();
+                const updatedItems = items.map((item) => {
+                    const expiry = new Date(item.expiryDate);
+                    const timeDiff = expiry.getTime() - today.getTime();
+                    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                    let status = { text: '', colorClass: '' };
+                    if (daysLeft > 5) {
+                        status = { text: `${daysLeft} days left`, colorClass: 'bg-green-100 text-green-700' };
+                    } else if (daysLeft > 1) {
+                        status = { text: `${daysLeft} days left`, colorClass: 'bg-orange-100 text-orange-700' };
+                    } else {
+                        status = { text: `Expired`, colorClass: 'bg-red-100 text-red-700' };
+                    }
+
+                    return { ...item, status };
+                });
+
+                setFreshCount(updatedItems.filter(i => i.status.colorClass.includes('green')).length);
+                setExpiringCount(updatedItems.filter(i => i.status.colorClass.includes('orange')).length);
+                setCriticalCount(updatedItems.filter(i => i.status.colorClass.includes('red')).length);
+
+                setMyItems(updatedItems);
+            } catch (error) {
+                console.error('Failed to fetch items:', error);
+            }
+        };
+
+        if (user?.email) fetchItems();
+    }, [axiosSecure, user?.email]);
+
+    const SummaryCard = ({ icon, color, title, count }) => (
+        <div className={`bg-${color}-100 border border-${color}-300 p-5 rounded-2xl shadow-sm flex items-center gap-4`}>
+            <div className={`w-12 h-12 rounded-full bg-${color}-200 text-${color}-700 flex items-center justify-center`}>
+                {icon}
+            </div>
+            <div>
+                <p className={`text-${color}-700 text-sm font-medium`}>{title}</p>
+                <p className={`text-3xl font-extrabold text-${color}-700`}>{count}</p>
+            </div>
+        </div>
+    );
+
+    const handleDelete = async (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axiosSecure.delete(`/food/delete/${id}`);
+                    if (res.data.deletedCount > 0) {
+                        const updatedItems = myItems.filter(item => item._id !== id);
+
+                        // Recalculate counts
+                        setFreshCount(updatedItems.filter(i => i.status.colorClass.includes('green')).length);
+                        setExpiringCount(updatedItems.filter(i => i.status.colorClass.includes('orange')).length);
+                        setCriticalCount(updatedItems.filter(i => i.status.colorClass.includes('red')).length);
+
+                        setMyItems(updatedItems);
+
+                        Swal.fire('Deleted!', 'Your item has been deleted.', 'success');
+                    } else {
+                        Swal.fire('Error!', 'Failed to delete the item.', 'error');
+                    }
+                } catch (error) {
+                    console.error('Failed to delete item:', error);
+                    Swal.fire('Error!', 'Failed to delete the item.', 'error');
+                }
+            }
+        });
+    };
+
+
     return (
         <div className="p-6 bg-base-100 min-h-screen">
-            {/* Header */}
-            <div className="text-center mb-8 px-2 sm:px-0">
+            <div className="text-center mb-8">
                 <h1 className="text-3xl sm:text-4xl font-extrabold text-success tracking-tight">
                     My Food Vault
                 </h1>
-                <p className="text-gray-500 mt-2 text-sm sm:text-base">Smart inventory management for John Doe</p>
+                <p className="text-gray-500 mt-2 text-sm sm:text-base">
+                    Smart inventory management for {user?.displayName || 'You'}
+                </p>
             </div>
 
             {/* Dashboard Summary */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 px-2 sm:px-0">
-                {/* Fresh Items */}
-                <div className="bg-success border border-green-300 p-5 rounded-2xl shadow-sm flex items-center gap-4 transition-transform transform hover:scale-[1.02]">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-700 shrink-0">
-                        <Sprout size={24} />
-                    </div>
-                    <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">Fresh Items</p>
-                        <p className="text-3xl font-extrabold text-green-700">1</p>
-                    </div>
-                </div>
-
-                {/* Expiring Soon */}
-                <div className="bg-orange-400 border border-orange-300 p-5 rounded-2xl shadow-sm flex items-center gap-4 transition-transform transform hover:scale-[1.02] ">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-100 text-orange-700 shrink-0">
-                        <Clock size={24} />
-                    </div>
-                    <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">Expiring Soon</p>
-                        <p className="text-3xl font-extrabold text-orange-700">3</p>
-                    </div>
-                </div>
-
-                {/* Critical */}
-                <div className="bg-red-500 border border-red-300 p-5 rounded-2xl shadow-sm flex items-center gap-4 transition-transform transform hover:scale-[1.02] ">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-700 shrink-0">
-                        <CircleAlert size={24} />
-                    </div>
-                    <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">Critical</p>
-                        <p className="text-3xl font-extrabold text-red-800">1</p>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+                <SummaryCard icon={<Sprout size={24} />} color="green" title="Fresh Items" count={freshCount} />
+                <SummaryCard icon={<Clock size={24} />} color="orange" title="Expiring Soon" count={expiringCount} />
+                <SummaryCard icon={<CircleAlert size={24} />} color="red" title="Critical" count={criticalCount} />
             </div>
 
-            {/* Inventory Table */}
+            {/* Table */}
             <div className="bg-base-100 rounded-2xl shadow overflow-hidden border border-base-300">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-violet-500 text-white p-5 rounded-t-2xl gap-4 sm:gap-0">
-                    <h2 className="text-xl font-semibold flex items-center gap-2 whitespace-nowrap">
-                        Food Inventory ({items.length} items)
+                    <h2 className="text-xl font-semibold">
+                        Food Inventory ({myItems.length} items)
                     </h2>
-                    <button className="bg-blue-500 hover:bg-blue-600 text-sm px-4 py-2 rounded-full shadow font-medium whitespace-nowrap">
-                        Utchas’s Collection
+                    <button className="bg-blue-500 hover:bg-blue-600 text-sm px-4 py-2 rounded-full shadow">
+                        {user.displayName}’s Collection
                     </button>
                 </div>
 
@@ -87,50 +135,45 @@ const MyItem = () => {
                     <table className="min-w-full table-auto text-sm">
                         <thead className="bg-base-200 text-base-content/80">
                             <tr>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">ITEM</th>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">CATEGORY</th>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">QUANTITY</th>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">EXPIRY DATE</th>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">STATUS</th>
-                                <th className="p-3 sm:p-5 text-left font-semibold whitespace-nowrap">ACTIONS</th>
+                                <th className="p-4 text-left font-semibold">ITEM</th>
+                                <th className="p-4 text-left font-semibold">CATEGORY</th>
+                                <th className="p-4 text-left font-semibold">QUANTITY</th>
+                                <th className="p-4 text-left font-semibold">EXPIRY DATE</th>
+                                <th className="p-4 text-left font-semibold">STATUS</th>
+                                <th className="p-4 text-left font-semibold">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody className="bg-base-100 text-base-content">
-                            {items.map((item) => (
-                                <tr
-                                    key={item.id}
-                                    className="border-t border-base-300 hover:bg-base-300 transition-colors"
-                                >
-                                    <td className="p-3 sm:p-5 flex items-center gap-3 sm:gap-4 whitespace-normal">
+                            {myItems.map((item) => (
+                                <tr key={item._id} className="border-t border-base-300 hover:bg-base-300 transition">
+                                    <td className="p-4 flex items-center gap-3">
                                         <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover shadow flex-shrink-0"
+                                            src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'}
+                                            alt={item.title}
+                                            className="w-12 h-12 rounded-full object-cover shadow"
                                         />
-                                        <div className="min-w-0">
-                                            <p className="font-semibold truncate">{item.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">Fresh & Natural</p>
+                                        <div>
+                                            <p className="font-semibold">{item.title}</p>
+                                            <p className="text-xs text-gray-500">{item.description}</p>
                                         </div>
                                     </td>
-                                    <td className="p-3 sm:p-5 whitespace-nowrap">
-                                        <span className="text-xs bg-base-300 px-2 py-1 rounded-full">
-                                            {item.category}
-                                        </span>
-                                    </td>
-                                    <td className="p-3 sm:p-5 whitespace-nowrap">{item.quantity}</td>
-                                    <td className="p-3 sm:p-5 whitespace-nowrap">{item.expiry}</td>
-                                    <td className="p-3 sm:p-5 whitespace-nowrap">
-                                        <span
-                                            className={`text-xs font-semibold px-3 py-1 rounded-full shadow ${item.status.colorClass}`}
-                                        >
+                                    <td className="p-4">{item.category}</td>
+                                    <td className="p-4">{item.quantity}</td>
+                                    <td className="p-4">{item.expiryDate}</td>
+                                    <td className="p-4">
+                                        <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
                                             {item.status.text}
                                         </span>
                                     </td>
-                                    <td className="p-3 sm:p-5 flex gap-2 whitespace-nowrap">
-                                        <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow flex items-center justify-center">
-                                            <Pencil size={16} />
-                                        </button>
-                                        <button className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white shadow flex items-center justify-center">
+                                    <td className="p-4 flex gap-2">
+                                        <Link to={`/food/details/${item._id}`} >
+                                            <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow cursor-pointer">
+                                                <Pencil size={16} />
+                                            </button>
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(item._id)}
+                                            className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white shadow cursor-pointer">
                                             <Trash2 size={16} />
                                         </button>
                                     </td>
