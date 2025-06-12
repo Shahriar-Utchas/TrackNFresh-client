@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CircleAlert, Clock, Pencil, Sprout, Trash2 } from 'lucide-react';
+import { CircleAlert, Clock, Eye, Pencil, RefreshCw, Sprout, Trash2 } from 'lucide-react';
 import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
 import { AuthContext } from '../../Provider/AuthContext';
 import { Link } from 'react-router';
@@ -23,8 +23,8 @@ const MyItem = () => {
                 const items = res.data;
 
                 if (!items || items.length === 0) {
-                    setMyItems([]); // ✅ Show empty state
-                    return; // ✅ Stop further execution
+                    setMyItems([]);
+                    return;
                 }
 
                 const today = new Date();
@@ -179,7 +179,12 @@ const MyItem = () => {
                                             </span>
                                         </td>
                                         <td className="p-4 flex gap-2">
-                                            <Link to={`/food/details/${item._id}`}>
+                                            <Link to={`/food/${item._id}`}>
+                                                <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow cursor-pointer">
+                                                    <Eye size={16} />
+                                                </button>
+                                            </Link>
+                                            <Link to={`/update-food/${item._id}`}>
                                                 <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow cursor-pointer">
                                                     <Pencil size={16} />
                                                 </button>

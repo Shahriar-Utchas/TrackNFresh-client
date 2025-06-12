@@ -42,7 +42,7 @@ const FoodDetails = () => {
     const handleAddNote = async (e) => {
         e.preventDefault();
 
-        const foodCreatorEmail = foodData.foodCreatorEmail;
+        const foodCreatorEmail = user?.email || 'Anonymous';
 
         const noteToAdd = {
             text: newNote,
@@ -52,7 +52,7 @@ const FoodDetails = () => {
         };
 
         try {
-            await axiosSecure.put(`/food/update/${foodData._id}`, {
+            await axiosSecure.put(`/food/update/note/${foodData._id}`, {
                 foodCreatorEmail,
                 note: noteToAdd,
             });
