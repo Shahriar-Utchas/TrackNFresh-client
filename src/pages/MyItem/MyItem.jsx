@@ -32,7 +32,7 @@ const MyItem = () => {
                     let status = { text: '', colorClass: '' };
                     if (daysLeft > 5) {
                         status = { text: `${daysLeft} days left`, colorClass: 'bg-green-100 text-green-700' };
-                    } else if (daysLeft > 1) {
+                    } else if (daysLeft > 0) {
                         status = { text: `${daysLeft} days left`, colorClass: 'bg-orange-100 text-orange-700' };
                     } else {
                         status = { text: `Expired`, colorClass: 'bg-red-100 text-red-700' };
