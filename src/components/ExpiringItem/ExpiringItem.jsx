@@ -1,6 +1,6 @@
 import React from "react";
 import { CalendarDays, Eye, Hourglass, AlertTriangle } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 const ExpiringItem = () => {
     const expiringItems = useLoaderData();
@@ -58,9 +58,11 @@ const ExpiringItem = () => {
                                     <span className="text-error font-semibold">{item.expiryDate}</span>
                                 </span>
                             </p>
-                            <button className="w-full bg-success text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-success-content transition-colors duration-300 cursor-pointer">
-                                <Eye className="w-4 h-4" /> See Details
-                            </button>
+                            <Link to={`/food/${item._id}`} className="w-full py-2 rounded-lg flex items-center justify-center gap-2">
+                                <button className="w-full bg-success text-white py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-success-content transition-colors duration-300 cursor-pointer">
+                                    <Eye className="w-4 h-4" /> See Details
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 ))}

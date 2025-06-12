@@ -7,6 +7,7 @@ import Fridge from "../pages/Fridge/Fridge";
 import AddFood from "../pages/AddFood/AddFood";
 import MyItem from "../pages/MyItem/MyItem";
 import PrivateRoutes from "./PrivateRoutes";
+import FoodDetails from "../pages/FoodDetails/FoodDetails";
 
 export const router = createBrowserRouter([
     {
@@ -15,7 +16,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                loader: () => fetch("http://localhost:3000/food/all"),
+                loader: () => fetch("http://localhost:3000/food/nearest-expiring"),
                 hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
                 </div>,
@@ -44,6 +45,15 @@ export const router = createBrowserRouter([
             {
                 path: "my-items",
                 element: <PrivateRoutes><MyItem></MyItem></PrivateRoutes>
+            }
+            ,
+            {
+                path: "food/:id",
+                loader: ({ params }) => fetch(`http://localhost:3000/food/${params.id}`),
+                hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+                </div>,
+                element: <FoodDetails></FoodDetails>,
             }
         ]
     },

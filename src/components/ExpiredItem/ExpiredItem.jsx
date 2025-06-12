@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CalendarDays, TimerOff, X } from "lucide-react";
 import axios from "axios";
+import { Link } from "react-router";
 
 const ExpiredItem = () => {
     const [expiredItems, setExpiredItems] = useState([]);
@@ -88,9 +89,11 @@ const ExpiredItem = () => {
                                 </p>
 
                                 <div className="mt-4 space-y-2">
-                                    <button className="w-full border border-red-500 text-red-500 py-1 rounded-lg text-sm font-medium hover:bg-error/10 transition duration-300 cursor-pointer">
-                                        See Details
-                                    </button>
+                                    <Link to={`/food/${item._id}`} className="w-full text-primary-content py-1 rounded-lg text-sm font-semibold block text-center">
+                                        <button className="w-full border border-red-500 text-red-500 py-1 rounded-lg text-sm font-medium hover:bg-error/10 transition duration-300 cursor-pointer">
+                                            See Details
+                                        </button>
+                                    </Link>
                                     <button className="w-full bg-red-500 text-error-content py-1 rounded-lg text-sm font-semibold hover:bg-red-500/90 transition duration-300 cursor-pointer">
                                         Mark as Disposed
                                     </button>

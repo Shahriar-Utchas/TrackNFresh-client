@@ -16,7 +16,7 @@ const Footer = () => {
                                     <img src="/img/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
                                 </div>
                             </div>
-                            <span className="text-2xl font-bold gradient-text font-space-grotesk">FreshNTrack</span>
+                            <span className="text-2xl font-bold gradient-text font-space-grotesk">Track<i><span className='text-emerald-400'>N</span></i>Fresh</span>
                         </div>
                         <p className="text-slate-300 text-lg leading-relaxed max-w-md">
                             Revolutionizing food management with intelligent tracking,
@@ -80,13 +80,14 @@ const Footer = () => {
                                 <div className="p-2 rounded-xl bg-slate-800">
                                     <Mail className="h-4 w-4" />
                                 </div>
-                                <span>shutchas6@gmail.com</span>
+                                <span><a href="mailto:shutchas6@gmail.com">shutchas6@gmail.com</a>
+                                </span>
                             </div>
                             <div className="flex items-center space-x-3">
                                 <div className="p-2 rounded-xl bg-slate-800">
                                     <Phone className="h-4 w-4" />
                                 </div>
-                                <span>+8801924482246</span>
+                                <span><a href="tel:+8801924482246">+8801924482246</a></span>
                             </div>
                             <div className="flex items-center space-x-3">
                                 <div className="p-2 rounded-xl bg-slate-800">
@@ -102,9 +103,9 @@ const Footer = () => {
                 <div className="border-t border-slate-700 mt-8 pt-8">
                     <div className="flex justify-center items-center text-slate-400 text-sm">
                         <span>
-                            © 2025 FreshNTrack. Developed By{' '}
+                            © 2025 Track<i>N</i>Fresh. Developed By{' '}
                             <a
-                                href="https://shahriar-utchas.vercel.app/"
+                                href="https://shahriar-utchas.vercel.app"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-primary hover:text-accent font-medium underline underline-offset-4 decoration-transparent hover:decoration-accent transition-all duration-300"

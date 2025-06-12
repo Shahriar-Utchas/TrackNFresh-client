@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid3X3, List } from "lucide-react";
-import { useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 const Fridge = () => {
   const foodsData = useLoaderData();
@@ -138,9 +138,11 @@ const Fridge = () => {
                   <span className="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">
                     {item.category}
                   </span>
-                  <button className="mt-3 w-full btn btn-success btn-sm">
-                    See Details
-                  </button>
+                  <Link to={`/food/${item._id}`}>
+                    <button className="mt-3 w-full btn btn-success btn-sm">
+                      See Details
+                    </button>
+                  </Link>
                 </div>
               </div>
             );
