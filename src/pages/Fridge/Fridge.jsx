@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Grid3X3, List } from "lucide-react";
+import { Grid3X3, List, AlarmClock, AlertTriangle, PackageCheck } from "lucide-react";
+import CountUp from "react-countup";
 import { Link, useLoaderData } from "react-router";
 
 const Fridge = () => {
@@ -15,17 +16,27 @@ const Fridge = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  const getDaysLeft = (expiry) => {
+    const today = new Date();
+    const expiryDate = new Date(expiry);
+    const diffTime = expiryDate.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
   const filteredItems = foodsData
     .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
     .filter((item) => category === "All Categories" || item.category === category)
     .sort((a, b) => {
-      if (sortOrder === "asc") {
-        return new Date(a.expiryDate) - new Date(b.expiryDate);
-      } else if (sortOrder === "desc") {
-        return new Date(b.expiryDate) - new Date(a.expiryDate);
-      }
+      if (sortOrder === "asc") return new Date(a.expiryDate) - new Date(b.expiryDate);
+      if (sortOrder === "desc") return new Date(b.expiryDate) - new Date(a.expiryDate);
       return 0;
     });
+
+  const expiredCount = filteredItems.filter((item) => getDaysLeft(item.expiryDate) <= 0).length;
+  const nearlyExpiredCount = filteredItems.filter((item) => {
+    const days = getDaysLeft(item.expiryDate);
+    return days > 0 && days <= 5;
+  }).length;
 
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -34,13 +45,6 @@ const Fridge = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, category, sortOrder]);
-
-  const getDaysLeft = (expiry) => {
-    const today = new Date();
-    const expiryDate = new Date(expiry);
-    const diffTime = expiryDate.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -53,6 +57,44 @@ const Fridge = () => {
     <div className="p-6 text-base-content">
       <h1 className="text-3xl font-bold mb-1">My Fridge</h1>
       <p className="mb-4">Keep track of all your food items and their expiry dates</p>
+
+      {/* CountUp Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-base-200 dark:bg-base-300 text-base-content rounded-2xl p-4 shadow-md flex items-center gap-4">
+          <div className="bg-base-300 dark:bg-base-100 p-2 rounded-full">
+            <PackageCheck className="w-6 h-6 text-base-content" />
+          </div>
+          <div>
+            <h3 className="text-sm font-medium">Total Items</h3>
+            <p className="text-2xl font-bold">
+              <CountUp end={filteredItems.length} duration={1.5} />
+            </p>
+          </div>
+        </div>
+        <div className="bg-red-100 dark:bg-red-600 text-red-800 dark:text-red-100 rounded-2xl p-4 shadow-md flex items-center gap-4">
+          <div className="bg-red-200 dark:bg-red-800 p-2 rounded-full">
+            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-200" />
+          </div>
+          <div>
+            <h3 className="text-sm font-medium">Expired Items</h3>
+            <p className="text-2xl font-bold">
+              <CountUp end={expiredCount} duration={1.5} />
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-yellow-100 dark:bg-orange-400 text-yellow-800 dark:text-yellow-100 rounded-2xl p-4 shadow-md flex items-center gap-4">
+          <div className="bg-yellow-200 dark:bg-yellow-800 p-2 rounded-full">
+            <AlarmClock className="w-6 h-6 text-yellow-600 dark:text-yellow-200" />
+          </div>
+          <div>
+            <h3 className="text-sm font-medium">Expiring in 5 Days</h3>
+            <p className="text-2xl font-bold">
+              <CountUp end={nearlyExpiredCount} duration={1.5} />
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Filter Panel */}
       <div className="bg-base-100 p-4 rounded-lg shadow flex flex-wrap items-center gap-4 mb-6">
@@ -101,7 +143,7 @@ const Fridge = () => {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Main Content */}
       {foodsData.length === 0 ? (
         <div className="text-center opacity-60 text-lg py-20">No items found.</div>
       ) : view === "grid" ? (
@@ -116,22 +158,16 @@ const Fridge = () => {
                     alt={item.title}
                     className="h-40 w-full object-cover"
                   />
-                  {/* {daysLeft <= 3 && ( */}
                   <span className="absolute top-2 right-2 bg-red-600 text-xs px-2 py-1 rounded-full flex items-center gap-1 text-white">
-                    <svg fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L4.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
+                    <AlertTriangle className="w-4 h-4" />
                     {daysLeft > 0 ? `${daysLeft} days left` : "Expired"}
                   </span>
-                  {/* )} */}
                 </div>
                 <div className="p-4">
                   <h2 className="font-semibold text-lg mb-1">{item.title}</h2>
                   <p className="text-sm"><strong>Quantity:</strong> {item.quantity}</p>
                   <p className="text-sm flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 4h10M5 11h14M5 15h14M5 19h14" />
-                    </svg>
+                    <AlarmClock className="w-4 h-4" />
                     <strong>Expires:</strong>{" "}
                     <span className="text-red-600">{formatDate(item.expiryDate)}</span>
                   </p>
@@ -215,10 +251,6 @@ const Fridge = () => {
           </button>
         </div>
       )}
-
-      <p className="text-sm text-right mt-4 opacity-70">
-        {filteredItems.filter((i) => getDaysLeft(i.expiryDate) <= 0).length} expired items
-      </p>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
 import { AuthContext } from '../../Provider/AuthContext';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
+import CountUp from 'react-countup';
 
 const MyItem = () => {
   const axiosSecure = UseAxiosSecure();
@@ -125,7 +126,7 @@ const handleUpdate = async (e) => {
       </div>
       <div>
         <p className={`text-${color}-700 text-sm font-medium`}>{title}</p>
-        <p className={`text-3xl font-extrabold text-${color}-700`}>{count}</p>
+        <p className={`text-3xl font-extrabold text-${color}-700`}><CountUp end={count} duration={3} /></p>
       </div>
     </div>
   );
