@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 
 const UseAxiosSecure = () => {
 
-    const { user } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
 
     axiosInstance.interceptors.request.use(
         (config) => {
@@ -22,17 +22,17 @@ const UseAxiosSecure = () => {
         }
     );
 
-    // axiosInstance.interceptors.response.use(
-    //     (response) => {
-    //         return response;
-    //     },
-    //     (error) => {
-    //         if (error.response && error.response.status === 401 || error.response.status === 403) {
-    //             logout();
-    //         }
-    //         return Promise.reject(error);
-    //     }
-    // );
+    axiosInstance.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        (error) => {
+            if (error.response && error.response.status === 401 || error.response.status === 403) {
+                logout();
+            }
+            return Promise.reject(error);
+        }
+    );
 
     return axiosInstance;
 };

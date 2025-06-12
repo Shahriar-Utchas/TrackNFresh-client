@@ -61,6 +61,7 @@ const AuthProvider = ({ children }) => {
         auth.signOut()
             .then(() => {
                 SetUser(null);
+                window.location.reload();
             })
             .catch((error) => {
                 console.error('Error signing out:', error);
