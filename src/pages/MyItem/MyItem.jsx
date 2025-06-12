@@ -5,7 +5,6 @@ import { AuthContext } from '../../Provider/AuthContext';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
 
-
 const MyItem = () => {
     const axiosSecure = UseAxiosSecure();
     const { user } = useContext(AuthContext);
@@ -22,6 +21,11 @@ const MyItem = () => {
             try {
                 const res = await axiosSecure.get(`/food/my-items?email=${user?.email}`);
                 const items = res.data;
+
+                if (!items || items.length === 0) {
+                    setMyItems([]); // ✅ Show empty state
+                    return; // ✅ Stop further execution
+                }
 
                 const today = new Date();
                 const updatedItems = items.map((item) => {
@@ -101,7 +105,6 @@ const MyItem = () => {
         });
     };
 
-
     return (
         <div className="p-6 bg-base-100 min-h-screen">
             <div className="text-center mb-8">
@@ -144,41 +147,53 @@ const MyItem = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-base-100 text-base-content">
-                            {myItems.map((item) => (
-                                <tr key={item._id} className="border-t border-base-300 hover:bg-base-300 transition">
-                                    <td className="p-4 flex items-center gap-3">
-                                        <img
-                                            src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'}
-                                            alt={item.title}
-                                            className="w-12 h-12 rounded-full object-cover shadow"
-                                        />
-                                        <div>
-                                            <p className="font-semibold">{item.title}</p>
-                                            <p className="text-xs text-gray-500">{item.description}</p>
-                                        </div>
-                                    </td>
-                                    <td className="p-4">{item.category}</td>
-                                    <td className="p-4">{item.quantity}</td>
-                                    <td className="p-4">{item.expiryDate}</td>
-                                    <td className="p-4">
-                                        <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
-                                            {item.status.text}
-                                        </span>
-                                    </td>
-                                    <td className="p-4 flex gap-2">
-                                        <Link to={`/food/details/${item._id}`} >
-                                            <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow cursor-pointer">
-                                                <Pencil size={16} />
-                                            </button>
+                            {myItems.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-10 text-gray-500">
+                                        No items added yet.
+                                        <Link to="/add-food" className="text-blue-500 px-2 hover:underline">
+                                            Add your first item
                                         </Link>
-                                        <button
-                                            onClick={() => handleDelete(item._id)}
-                                            className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white shadow cursor-pointer">
-                                            <Trash2 size={16} />
-                                        </button>
                                     </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                myItems.map((item) => (
+                                    <tr key={item._id} className="border-t border-base-300 hover:bg-base-300 transition">
+                                        <td className="p-4 flex items-center gap-3">
+                                            <img
+                                                src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'}
+                                                alt={item.title}
+                                                className="w-12 h-12 rounded-full object-cover shadow"
+                                            />
+                                            <div>
+                                                <p className="font-semibold">{item.title}</p>
+                                                <p className="text-xs text-gray-500">{item.description}</p>
+                                            </div>
+                                        </td>
+                                        <td className="p-4">{item.category}</td>
+                                        <td className="p-4">{item.quantity}</td>
+                                        <td className="p-4">{item.expiryDate}</td>
+                                        <td className="p-4">
+                                            <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
+                                                {item.status.text}
+                                            </span>
+                                        </td>
+                                        <td className="p-4 flex gap-2">
+                                            <Link to={`/food/details/${item._id}`}>
+                                                <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white shadow cursor-pointer">
+                                                    <Pencil size={16} />
+                                                </button>
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(item._id)}
+                                                className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white shadow cursor-pointer"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

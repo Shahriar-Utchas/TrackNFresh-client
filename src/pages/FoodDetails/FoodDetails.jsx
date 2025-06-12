@@ -63,7 +63,7 @@ const FoodDetails = () => {
             Swal.fire({
                 icon: 'success',
                 title: 'Note added successfully!',
-                timer: 1500,
+                timer: 1000,
                 showConfirmButton: false,
             });
         } catch (error) {
@@ -75,6 +75,54 @@ const FoodDetails = () => {
             });
         }
     };
+
+    const handleDeleteNote = async (noteToDelete) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you really want to delete this note?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axiosSecure.delete(`/food/${foodData._id}/note`, {
+                    data: { note: noteToDelete },
+                });
+
+                setNotes((prevNotes) =>
+                    prevNotes.filter(
+                        (note) =>
+                            !(
+                                note.text === noteToDelete.text &&
+                                note.authorEmail === noteToDelete.authorEmail &&
+                                note.date === noteToDelete.date
+                            )
+                    )
+                );
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'Your note has been deleted.',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            } catch (error) {
+                console.error('Failed to delete note:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to delete note',
+                    text: error.message,
+                });
+            }
+        }
+    };
+
+
 
 
     return (
@@ -159,19 +207,28 @@ const FoodDetails = () => {
                                 notes.map((note, index) => (
                                     <div
                                         key={index}
-                                        className="bg-base-200 rounded-md p-3 mb-2 text-sm text-base-content"
+                                        className="bg-base-200 rounded-md p-3 mb-2 text-sm text-base-content relative"
                                     >
                                         <p>{note.text}</p>
                                         <p className="text-xs opacity-60 mt-1">
                                             By {note.author} on {note.date}
                                         </p>
+
+                                        {/* Show delete button if current user is the author */}
+                                        {user?.email === note.authorEmail && (
+                                            <button
+                                                onClick={() => handleDeleteNote(note)}
+                                                className="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs cursor-pointer"
+                                            >
+                                                Delete
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-sm text-base-content opacity-60">
-                                    No notes added yet.
-                                </p>
+                                <p className="text-sm text-base-content opacity-60">No notes added yet.</p>
                             )}
+
                         </div>
 
                         {/* Form for new note */}
@@ -193,7 +250,7 @@ const FoodDetails = () => {
                                 type="submit"
                                 disabled={!user}
                                 className={`mt-2 w-full py-2 rounded-md font-semibold ${user
-                                    ? 'bg-green-500 text-white hover:bg-green-600'
+                                    ? 'bg-green-500 text-white hover:bg-green-600 cursor-pointer transition-colors duration-200'
                                     : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                     }`}
                             >

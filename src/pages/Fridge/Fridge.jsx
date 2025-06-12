@@ -176,7 +176,9 @@ const Fridge = () => {
                   <td>{item.quantity}</td>
                   <td className="text-red-600">{formatDate(item.expiryDate)}</td>
                   <td>
-                    <button className="btn btn-sm">See Details</button>
+                    <Link to={`/food/${item._id}`}>
+                      <button className="btn btn-sm">See Details</button>
+                    </Link>
                   </td>
                 </tr>
               ))}
