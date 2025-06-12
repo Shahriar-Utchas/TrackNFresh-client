@@ -29,6 +29,8 @@ const FoodDetails = () => {
         (1000 * 60 * 60 * 24)
     );
 
+    const isOwner = user?.email == foodData.foodCreatorEmail;
+
     useEffect(() => {
         if (foodData.notes) {
             if (Array.isArray(foodData.notes)) {
@@ -121,9 +123,6 @@ const FoodDetails = () => {
             }
         }
     };
-
-
-
 
     return (
         <div className="p-6 max-w-6xl mx-auto text-base-content">
@@ -228,34 +227,43 @@ const FoodDetails = () => {
                             ) : (
                                 <p className="text-sm text-base-content opacity-60">No notes added yet.</p>
                             )}
-
                         </div>
 
                         {/* Form for new note */}
                         <form onSubmit={handleAddNote}>
                             <textarea
                                 placeholder={
-                                    user
-                                        ? 'Write a note about this item...'
-                                        : 'Please log in to add notes'
+                                    !user
+                                        ? 'Please log in to add notes'
+                                        : !isOwner
+                                            ? 'Only the owner can add notes'
+                                            : 'Write a note about this item...'
                                 }
                                 className="w-full border rounded-md p-2 mt-3 text-sm bg-base-100 text-base-content"
-                                disabled={!user}
+                                disabled={!user || !isOwner}
                                 value={newNote}
                                 onChange={(e) => setNewNote(e.target.value)}
                                 required
                             />
 
-                            <button
-                                type="submit"
-                                disabled={!user}
-                                className={`mt-2 w-full py-2 rounded-md font-semibold ${user
-                                    ? 'bg-green-500 text-white hover:bg-green-600 cursor-pointer transition-colors duration-200'
-                                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                    }`}
-                            >
-                                Add Note
-                            </button>
+                            <div className="relative group">
+                                <button
+                                    type="submit"
+                                    disabled={!user || !isOwner}
+                                    className={`mt-2 w-full py-2 rounded-md font-semibold transition-colors duration-200 ${user && isOwner
+                                            ? 'bg-green-500 text-white hover:bg-green-600 cursor-pointer'
+                                            : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                        }`}
+                                >
+                                    Add Note
+                                </button>
+
+                                {user && !isOwner && (
+                                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-xs text-white bg-black px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                                        Only the owner can add notes
+                                    </span>
+                                )}
+                            </div>
                         </form>
 
                         {!user && (
@@ -270,7 +278,6 @@ const FoodDetails = () => {
                             </p>
                         )}
                     </div>
-
                 </div>
             </div>
         </div>

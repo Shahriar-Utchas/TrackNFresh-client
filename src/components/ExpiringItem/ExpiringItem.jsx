@@ -22,14 +22,14 @@ const ExpiringItem = () => {
                 Expiring Soon
             </h1>
             <p className="text-base-content mb-10 text-lg">
-                Act fast! These items need your attention.
+                Act fast! These items need your attention within 5 days.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6 max-w-7xl mx-auto">
                 {expiringItems.length === 0 ? (
                     <div className="col-span-full text-center text-gray-500 py-10">
                         <h2 className="text-2xl font-semibold">No fresh items expiring soon</h2>
-                        <p className="text-gray-500 mt-2">You're all good! Nothing will expire in the next 6 days.</p>
+                        <p className="text-gray-500 mt-2">You're all good! Nothing will expire in the next 5 days.</p>
                     </div>
                 ) : (
                     expiringItems.map((item, index) => (
