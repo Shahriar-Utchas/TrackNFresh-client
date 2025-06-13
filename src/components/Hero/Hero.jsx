@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Zap, Shield, Users } from 'lucide-react';
+import { Link } from 'react-router';
 const slides = [
     {
         title: "Smart Food Management",
@@ -78,10 +79,12 @@ const Hero = () => {
                                 <p className="px-2 md:px-0 text-lg md:text-xl text-emerald-600 mb-4 font-medium">{slide.subtitle}</p>
                                 <p className="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">{slide.description}</p>
                                 <div className="flex justify-center lg:justify-start">
-                                    <button className="group inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-base md:text-lg shadow-lg hover:shadow-xl">
-                                        {slide.cta}
-                                        <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-200 group-hover:translate-x-1" />
-                                    </button>
+                                    <Link to={`/fridge`}>
+                                        <button className="group inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-base md:text-lg shadow-lg hover:shadow-xl">
+                                            {slide.cta}
+                                            <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-200 group-hover:translate-x-1" />
+                                        </button>
+                                    </Link>
                                 </div>
                                 <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-6">
                                     {features.map(({ icon: Icon, text }, i) => (
