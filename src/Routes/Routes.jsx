@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                loader: () => fetch("http://localhost:3000/food/nearest-expiring"),
+                loader: () => fetch("https://track-n-fresh-server.vercel.app/food/nearest-expiring"),
                 hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
                 </div>,
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "fridge",
-                loader: () => fetch("http://localhost:3000/food/all"),
+                loader: () => fetch("https://track-n-fresh-server.vercel.app/food/all"),
                 hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
                 </div>,
@@ -51,7 +51,7 @@ export const router = createBrowserRouter([
             ,
             {
                 path: "food/:id",
-                loader: ({ params }) => fetch(`http://localhost:3000/food/${params.id}`),
+                loader: ({ params }) => fetch(`https://track-n-fresh-server.vercel.app/food/${params.id}`),
                 hydrateFallbackElement: <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
                 </div>,

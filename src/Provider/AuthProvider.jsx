@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
             };
 
             // Send user data to the server
-            await axios.post(`http://localhost:3000/auth/register`, newUser);
+            await axios.post(`https://track-n-fresh-server.vercel.app/auth/register`, newUser);
 
             // SetUser({ ...user, displayName: name, photoURL: finalPhoto });
             return true;

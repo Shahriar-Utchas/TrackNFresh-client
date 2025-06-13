@@ -10,15 +10,18 @@ import { Helmet } from 'react-helmet';
 const MyItem = () => {
   const axiosSecure = UseAxiosSecure();
   const { user } = useContext(AuthContext);
+
   const [myItems, setMyItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [freshCount, setFreshCount] = useState(0);
   const [expiringCount, setExpiringCount] = useState(0);
   const [criticalCount, setCriticalCount] = useState(0);
 
   const fetchItems = async () => {
+    setLoading(true);
     try {
       const res = await axiosSecure.get(`/food/my-items?email=${user?.email}`);
       const items = res.data;
@@ -47,6 +50,8 @@ const MyItem = () => {
       setCriticalCount(updatedItems.filter(i => i.status.colorClass.includes('red')).length);
     } catch (error) {
       console.error('Failed to fetch items:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,7 +124,6 @@ const MyItem = () => {
     }
   };
 
-
   const SummaryCard = ({ icon, color, title, count }) => (
     <div className={`bg-${color}-100 border border-${color}-300 p-5 rounded-2xl shadow-sm flex items-center gap-4`}>
       <div className={`w-12 h-12 rounded-full bg-${color}-200 text-${color}-700 flex items-center justify-center`}>
@@ -131,6 +135,16 @@ const MyItem = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center">
+        <span className="loading loading-dots loading-lg text-primary"></span>
+        <p className="text-lg font-semibold text-base-content">Loading your data...</p>
+      </div>
+    );
+  }
+
 
   return (
     <>
@@ -207,14 +221,14 @@ const MyItem = () => {
                       </td>
                       <td className="p-4 flex gap-2">
                         <Link to={`/food/${item._id}`}>
-                          <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
+                          <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
                             <Eye size={16} />
                           </button>
                         </Link>
-                        <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
+                        <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
                           <Pencil size={16} />
                         </button>
-                        <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white">
+                        <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white cursor-pointer">
                           <Trash2 size={16} />
                         </button>
                       </td>
