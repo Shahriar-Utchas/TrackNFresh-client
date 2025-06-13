@@ -62,22 +62,22 @@ const Navbar = () => {
           <Link to="/" className="flex items-center space-x-3">
             <div className="flex items-center space-x-3 flex-shrink-0">
               <div className="group">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+                <div className="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
                   <img src="/img/logo.png" alt="logo" className="w-8 h-8 md:w-10 md:h-10 object-contain" />
                 </div>
               </div>
 
               <div className="flex flex-col">
                 <div className="flex items-center space-x-1">
-                  <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 bg-clip-text text-transparent tracking-tight">
+                  <span className="md:text-2xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 bg-clip-text text-transparent tracking-tight">
                     Track<span className="text-emerald-400">
                       <i>N</i>
                     </span>
                     Fresh
                   </span>
-                  <Leaf className="w-6 h-6 md:w-8 md:h-7 text-green-600 animate-bounce" />
+                  <Leaf className="w-5 h-5 md:w-8 md:h-7 text-green-600 animate-bounce" />
                 </div>
-                <span className="text-xs md:text-sm text-green-800 dark:text-green-400">Stay Fresh, Waste Less</span>
+                <span className="text-[10px] md:text-sm text-green-800 dark:text-green-400">Stay Fresh, Waste Less</span>
               </div>
             </div>
           </Link>

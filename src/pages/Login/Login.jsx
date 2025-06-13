@@ -79,11 +79,11 @@ const Login = () => {
         <div className="flex flex-col md:flex-row bg-base-100 shadow-2xl rounded-2xl overflow-hidden w-full max-w-4xl">
 
           {/* Lottie animation now visible on all screen sizes */}
-          <div className="w-full md:w-1/2 flex items-center justify-center bg-info-content p-6 md:p-10">
-            <Lottie 
-              animationData={loginAnimation} 
-              loop 
-              style={{ width: '100%', maxWidth: 300, height: 'auto' }} 
+          <div className="w-full h-[250px] md:h-auto md:w-1/2 flex items-center justify-center bg-info-content p-6 md:p-10">
+            <Lottie
+              animationData={loginAnimation}
+              loop
+              style={{ width: '100%', maxWidth: 300, height: 'auto' }}
             />
           </div>
 
