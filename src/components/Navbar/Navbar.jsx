@@ -69,7 +69,7 @@ const Navbar = () => {
 
               <div className="flex flex-col">
                 <div className="flex items-center space-x-1">
-                  <span className="md:text-2xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 bg-clip-text text-transparent tracking-tight">
+                  <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-600 bg-clip-text text-transparent tracking-tight">
                     Track<span className="text-emerald-400">
                       <i>N</i>
                     </span>
