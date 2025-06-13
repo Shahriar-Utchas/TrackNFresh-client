@@ -7,6 +7,7 @@ import ExpiringItem from '../../components/ExpiringItem/ExpiringItem';
 import ExpiredItem from '../../components/ExpiredItem/ExpiredItem';
 import WhyFreshNTrack from '../../components/WhyFreshNTrack/WhyFreshNTrack';
 import FoodTips from '../../components/FoodTips/FoodTips';
+import { Helmet } from 'react-helmet';
 
 const fadeInUp = {
     initial: { opacity: 0, y: 50 },
@@ -27,6 +28,9 @@ const Home = () => {
 
     return (
         <>
+            <Helmet>
+                <title>FreshNTrack | Home</title>
+            </Helmet>
             <motion.div {...fadeInUp}>
                 <Hero />
             </motion.div>

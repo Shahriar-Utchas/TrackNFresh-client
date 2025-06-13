@@ -8,11 +8,13 @@ import AddFood from "../pages/AddFood/AddFood";
 import MyItem from "../pages/MyItem/MyItem";
 import PrivateRoutes from "./PrivateRoutes";
 import FoodDetails from "../pages/FoodDetails/FoodDetails";
+import Error404 from "../pages/Error404/Error404";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         Component: Root,
+        errorElement: <Error404></Error404>,
         children: [
             {
                 index: true,

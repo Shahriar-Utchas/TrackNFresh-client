@@ -5,6 +5,7 @@ import { AuthContext } from '../../Provider/AuthContext';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
 import CountUp from 'react-countup';
+import { Helmet } from 'react-helmet';
 
 const MyItem = () => {
   const axiosSecure = UseAxiosSecure();
@@ -91,32 +92,32 @@ const MyItem = () => {
     setSelectedItem((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleUpdate = async (e) => {
-  e.preventDefault();
-  setIsUpdating(true);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setIsUpdating(true);
 
-  try {
-    const { _id, ...updateData } = selectedItem;
+    try {
+      const { _id, ...updateData } = selectedItem;
 
-    const res = await axiosSecure.put(`/food/update/${_id}`, {
-      ...updateData,
-      foodCreatorEmail: user.email,
-    });
+      const res = await axiosSecure.put(`/food/update/${_id}`, {
+        ...updateData,
+        foodCreatorEmail: user.email,
+      });
 
-    if (res.data.modifiedCount > 0) {
-      Swal.fire('Success!', 'Food item updated successfully!', 'success');
-      document.getElementById('update_modal').close();
-      fetchItems();
-    } else {
-      Swal.fire('Error!', 'Update failed or no changes made.', 'error');
+      if (res.data.modifiedCount > 0) {
+        Swal.fire('Success!', 'Food item updated successfully!', 'success');
+        document.getElementById('update_modal').close();
+        fetchItems();
+      } else {
+        Swal.fire('Error!', 'Update failed or no changes made.', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating:', error);
+      Swal.fire('Error!', 'Something went wrong during update.', 'error');
+    } finally {
+      setIsUpdating(false);
     }
-  } catch (error) {
-    console.error('Error updating:', error);
-    Swal.fire('Error!', 'Something went wrong during update.', 'error');
-  } finally {
-    setIsUpdating(false);
-  }
-};
+  };
 
 
   const SummaryCard = ({ icon, color, title, count }) => (
@@ -132,173 +133,178 @@ const handleUpdate = async (e) => {
   );
 
   return (
-    <div className="p-6 bg-base-100 min-h-screen">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-success tracking-tight">
-          My Food Vault
-        </h1>
-        <p className="text-gray-500 mt-2 text-sm sm:text-base">
-          Smart inventory management for {user?.displayName || 'You'}
-        </p>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-        <SummaryCard icon={<Sprout size={24} />} color="green" title="Fresh Items" count={freshCount} />
-        <SummaryCard icon={<Clock size={24} />} color="orange" title="Expiring Soon" count={expiringCount} />
-        <SummaryCard icon={<CircleAlert size={24} />} color="red" title="Critical" count={criticalCount} />
-      </div>
-
-      {/* Table */}
-      <div className="bg-base-100 rounded-2xl shadow overflow-hidden border border-base-300">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-violet-500 text-white p-5 rounded-t-2xl gap-4 sm:gap-0">
-          <h2 className="text-xl font-semibold">Food Inventory ({myItems.length} items)</h2>
-          <button className="bg-blue-500 hover:bg-blue-600 text-sm px-4 py-2 rounded-full shadow">
-            {user.displayName}’s Collection
-          </button>
+    <>
+      <Helmet>
+        <title>FreshNTrack | My Item</title>
+      </Helmet>
+      <div className="p-6 bg-base-100 min-h-screen">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-success tracking-tight">
+            My Food Vault
+          </h1>
+          <p className="text-gray-500 mt-2 text-sm sm:text-base">
+            Smart inventory management for {user?.displayName || 'You'}
+          </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto text-sm">
-            <thead className="bg-base-200 text-base-content/80">
-              <tr>
-                <th className="p-4">ITEM</th>
-                <th className="p-4">CATEGORY</th>
-                <th className="p-4">QUANTITY</th>
-                <th className="p-4">EXPIRY</th>
-                <th className="p-4">STATUS</th>
-                <th className="p-4">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody className="bg-base-100">
-              {myItems.length === 0 ? (
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+          <SummaryCard icon={<Sprout size={24} />} color="green" title="Fresh Items" count={freshCount} />
+          <SummaryCard icon={<Clock size={24} />} color="orange" title="Expiring Soon" count={expiringCount} />
+          <SummaryCard icon={<CircleAlert size={24} />} color="red" title="Critical" count={criticalCount} />
+        </div>
+
+        {/* Table */}
+        <div className="bg-base-100 rounded-2xl shadow overflow-hidden border border-base-300">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-violet-500 text-white p-5 rounded-t-2xl gap-4 sm:gap-0">
+            <h2 className="text-xl font-semibold">Food Inventory ({myItems.length} items)</h2>
+            <button className="bg-blue-500 hover:bg-blue-600 text-sm px-4 py-2 rounded-full shadow">
+              {user.displayName}’s Collection
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto text-sm">
+              <thead className="bg-base-200 text-base-content/80">
                 <tr>
-                  <td colSpan="6" className="text-center py-10 text-gray-500">
-                    No items added yet.{' '}
-                    <Link to="/add-food" className="text-blue-500 hover:underline">Add your first item</Link>
-                  </td>
+                  <th className="p-4">ITEM</th>
+                  <th className="p-4">CATEGORY</th>
+                  <th className="p-4">QUANTITY</th>
+                  <th className="p-4">EXPIRY</th>
+                  <th className="p-4">STATUS</th>
+                  <th className="p-4">ACTIONS</th>
                 </tr>
-              ) : (
-                myItems.map((item) => (
-                  <tr key={item._id} className="border-t hover:bg-base-300 transition">
-                    <td className="p-4 flex items-center gap-3">
-                      <img
-                        src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'}
-                        className="w-12 h-12 rounded-full object-cover shadow"
-                        alt={item.title}
-                      />
-                      <div>
-                        <p className="font-semibold">{item.title}</p>
-                        <p className="text-xs text-gray-500">{item.description}</p>
-                      </div>
-                    </td>
-                    <td className="p-4">{item.category}</td>
-                    <td className="p-4">{item.quantity}</td>
-                    <td className="p-4">{item.expiryDate}</td>
-                    <td className="p-4">
-                      <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
-                        {item.status.text}
-                      </span>
-                    </td>
-                    <td className="p-4 flex gap-2">
-                      <Link to={`/food/${item._id}`}>
-                        <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
-                          <Eye size={16} />
-                        </button>
-                      </Link>
-                      <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
-                        <Pencil size={16} />
-                      </button>
-                      <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white">
-                        <Trash2 size={16} />
-                      </button>
+              </thead>
+              <tbody className="bg-base-100">
+                {myItems.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-10 text-gray-500">
+                      No items added yet.{' '}
+                      <Link to="/add-food" className="text-blue-500 hover:underline">Add your first item</Link>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  myItems.map((item) => (
+                    <tr key={item._id} className="border-t hover:bg-base-300 transition">
+                      <td className="p-4 flex items-center gap-3">
+                        <img
+                          src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'}
+                          className="w-12 h-12 rounded-full object-cover shadow"
+                          alt={item.title}
+                        />
+                        <div>
+                          <p className="font-semibold">{item.title}</p>
+                          <p className="text-xs text-gray-500">{item.description}</p>
+                        </div>
+                      </td>
+                      <td className="p-4">{item.category}</td>
+                      <td className="p-4">{item.quantity}</td>
+                      <td className="p-4">{item.expiryDate}</td>
+                      <td className="p-4">
+                        <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
+                          {item.status.text}
+                        </span>
+                      </td>
+                      <td className="p-4 flex gap-2">
+                        <Link to={`/food/${item._id}`}>
+                          <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
+                            <Eye size={16} />
+                          </button>
+                        </Link>
+                        <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white">
+                          <Pencil size={16} />
+                        </button>
+                        <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white">
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Update Modal */}
-      <dialog id="update_modal" className="modal">
-        <div className="modal-box max-w-xl">
-          <h3 className="font-bold text-lg mb-4">Update Food Item</h3>
-          {selectedItem && (
-            <form onSubmit={handleUpdate} className="space-y-4">
-              <input
-                type="url"
-                name="imageUrl"
-                placeholder="Image URL"
-                className="input input-bordered w-full"
-                value={selectedItem.imageUrl}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="title"
-                placeholder="Title"
-                className="input input-bordered w-full"
-                value={selectedItem.title}
-                onChange={handleInputChange}
-                required
-              />
-              <select
-                name="category"
-                className="select select-bordered w-full"
-                value={selectedItem.category}
-                onChange={handleInputChange}
-                required
-              >
-                <option disabled value="">Select Category</option>
-                <option value="Fruits">Fruits</option>
-                <option value="Vegetables">Vegetables</option>
-                <option value="Dairy">Dairy</option>
-                <option value="Meat">Meat</option>
-                <option value="Snacks">Snacks</option>
-              </select>
-              <input
-                type="text"
-                name="quantity"
-                placeholder="Quantity"
-                className="input input-bordered w-full"
-                value={selectedItem.quantity}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="date"
-                name="expiryDate"
-                className="input input-bordered w-full"
-                value={selectedItem.expiryDate}
-                onChange={handleInputChange}
-                required
-              />
-              <textarea
-                name="description"
-                className="textarea textarea-bordered w-full"
-                placeholder="Description"
-                value={selectedItem.description}
-                onChange={handleInputChange}
-              />
-              <div className="modal-action">
-                <button type="submit" className="btn btn-success text-white" disabled={isUpdating}>
-                  {isUpdating ? 'Updating...' : 'Update'}
-                </button>
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => document.getElementById('update_modal').close()}
+        {/* Update Modal */}
+        <dialog id="update_modal" className="modal">
+          <div className="modal-box max-w-xl">
+            <h3 className="font-bold text-lg mb-4">Update Food Item</h3>
+            {selectedItem && (
+              <form onSubmit={handleUpdate} className="space-y-4">
+                <input
+                  type="url"
+                  name="imageUrl"
+                  placeholder="Image URL"
+                  className="input input-bordered w-full"
+                  value={selectedItem.imageUrl}
+                  onChange={handleInputChange}
+                />
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Title"
+                  className="input input-bordered w-full"
+                  value={selectedItem.title}
+                  onChange={handleInputChange}
+                  required
+                />
+                <select
+                  name="category"
+                  className="select select-bordered w-full"
+                  value={selectedItem.category}
+                  onChange={handleInputChange}
+                  required
                 >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </dialog>
-    </div>
+                  <option disabled value="">Select Category</option>
+                  <option value="Fruits">Fruits</option>
+                  <option value="Vegetables">Vegetables</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Meat">Meat</option>
+                  <option value="Snacks">Snacks</option>
+                </select>
+                <input
+                  type="text"
+                  name="quantity"
+                  placeholder="Quantity"
+                  className="input input-bordered w-full"
+                  value={selectedItem.quantity}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="date"
+                  name="expiryDate"
+                  className="input input-bordered w-full"
+                  value={selectedItem.expiryDate}
+                  onChange={handleInputChange}
+                  required
+                />
+                <textarea
+                  name="description"
+                  className="textarea textarea-bordered w-full"
+                  placeholder="Description"
+                  value={selectedItem.description}
+                  onChange={handleInputChange}
+                />
+                <div className="modal-action">
+                  <button type="submit" className="btn btn-success text-white" disabled={isUpdating}>
+                    {isUpdating ? 'Updating...' : 'Update'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => document.getElementById('update_modal').close()}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </dialog>
+      </div>
+    </>
   );
 };
 

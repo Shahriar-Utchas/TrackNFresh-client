@@ -5,6 +5,7 @@ import registrationAnimation from '../../../public/lottie-animation/registration
 import { AuthContext } from '../../Provider/AuthContext';
 import { useLocation, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
+import { Helmet } from 'react-helmet';
 
 const Registration = () => {
     const { user, createUser, SetUser, handleGoogleLogin } = useContext(AuthContext);
@@ -123,135 +124,140 @@ const Registration = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-base-300 px-4">
-            <div className="flex flex-col md:flex-row-reverse bg-base-100 shadow-2xl rounded-2xl overflow-hidden w-full max-w-4xl m-5">
+        <>
+            <Helmet>
+                <title>FreshNTrack | Registration</title>
+            </Helmet>
+            <div className="min-h-screen flex items-center justify-center bg-base-300 px-4">
+                <div className="flex flex-col md:flex-row-reverse bg-base-100 shadow-2xl rounded-2xl overflow-hidden w-full max-w-4xl m-5">
 
-                {/* Lottie animation */}
-                <div className="hidden md:flex w-[40%] items-center justify-center bg-info-content p-10">
-                    <Lottie animationData={registrationAnimation} loop style={{ width: 400, height: 400 }} />
-                </div>
-
-                {/* Registration form */}
-                <div className="w-full md:w-[70%] p-10">
-                    <div className="mb-8">
-                        <h2 className="text-4xl font-bold text-dark mb-2">Create an Account</h2>
-                        <p className="text-gray-500">Please fill in the details to register</p>
+                    {/* Lottie animation */}
+                    <div className="hidden md:flex w-[40%] items-center justify-center bg-info-content p-10">
+                        <Lottie animationData={registrationAnimation} loop style={{ width: 400, height: 400 }} />
                     </div>
 
-                    <form className="space-y-6" onSubmit={handleSubmit}>
-                        <div>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Full Name *"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
+                    {/* Registration form */}
+                    <div className="w-full md:w-[70%] p-10">
+                        <div className="mb-8">
+                            <h2 className="text-4xl font-bold text-dark mb-2">Create an Account</h2>
+                            <p className="text-gray-500">Please fill in the details to register</p>
                         </div>
 
-                        <div>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                placeholder="Email *"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
+                        <form className="space-y-6" onSubmit={handleSubmit}>
+                            <div>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Full Name *"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
 
-                        <div>
-                            <input
-                                type="url"
-                                name="photoURL"
-                                value={formData.photoURL}
-                                onChange={handleChange}
-                                placeholder="Photo URL (optional)"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
+                            <div>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Email *"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
 
-                        <div className="relative">
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="Password *"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                            <span
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-4 top-2/4 -translate-y-2/4 cursor-pointer text-gray-500"
+                            <div>
+                                <input
+                                    type="url"
+                                    name="photoURL"
+                                    value={formData.photoURL}
+                                    onChange={handleChange}
+                                    placeholder="Photo URL (optional)"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    placeholder="Password *"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                                <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-2/4 -translate-y-2/4 cursor-pointer text-gray-500"
+                                >
+                                    {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+                                </span>
+                                {errors.password && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+                                )}
+                            </div>
+
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    placeholder="Confirm Password *"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                                <span
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-4 top-2/4 -translate-y-2/4 cursor-pointer text-gray-500"
+                                >
+                                    {showConfirmPassword ? <EyeOff size={22} /> : <Eye size={22} />}
+                                </span>
+                                {errors.confirmPassword && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
                             >
-                                {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-                            </span>
-                            {errors.password && (
-                                <p className="text-sm text-red-500 mt-1">{errors.password}</p>
-                            )}
-                        </div>
+                                {loading ? 'Registering...' : 'Register'}
+                            </button>
 
-                        <div className="relative">
-                            <input
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                placeholder="Confirm Password *"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                            <span
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute right-4 top-2/4 -translate-y-2/4 cursor-pointer text-gray-500"
+                            <div className="flex items-center justify-center gap-2 text-sm">
+                                <span className="border-b w-1/5"></span>
+                                <span>or register with</span>
+                                <span className="border-b w-1/5"></span>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleGoogleRegister}
+                                className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-200 hover:text-black transition cursor-pointer"
                             >
-                                {showConfirmPassword ? <EyeOff size={22} /> : <Eye size={22} />}
-                            </span>
-                            {errors.confirmPassword && (
-                                <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
-                            )}
-                        </div>
+                                <img
+                                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                                    alt="Google"
+                                    className="w-5 h-5"
+                                />
+                                <span className=" font-medium">{loading ? 'Registering...' : 'Register with Google'}</span>
+                            </button>
+                        </form>
 
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium"
-                        >
-                            {loading ? 'Registering...' : 'Register'}
-                        </button>
-
-                        <div className="flex items-center justify-center gap-2 text-sm">
-                            <span className="border-b w-1/5"></span>
-                            <span>or register with</span>
-                            <span className="border-b w-1/5"></span>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={handleGoogleRegister}
-                            className="w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg hover:bg-gray-200 hover:text-black transition cursor-pointer"
-                        >
-                            <img
-                                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                                alt="Google"
-                                className="w-5 h-5"
-                            />
-                            <span className=" font-medium">{loading ? 'Registering...' : 'Register with Google'}</span>
-                        </button>
-                    </form>
-
-                    <p className="mt-6 text-center text-sm">
-                        Already have an account?{' '}
-                        <a href="/login" className="text-blue-600 hover:underline font-medium">
-                            Login here
-                        </a>
-                    </p>
+                        <p className="mt-6 text-center text-sm">
+                            Already have an account?{' '}
+                            <a href="/login" className="text-blue-600 hover:underline font-medium">
+                                Login here
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
