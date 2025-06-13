@@ -181,56 +181,59 @@ const MyItem = () => {
             <table className="min-w-full table-auto text-sm">
               <thead className="bg-base-200 text-base-content/80">
                 <tr>
-                  <th className="p-4">ITEM</th>
-                  <th className="p-4">CATEGORY</th>
-                  <th className="p-4">QUANTITY</th>
-                  <th className="p-4">EXPIRY</th>
-                  <th className="p-4">STATUS</th>
-                  <th className="p-4">ACTIONS</th>
+                  <th className="p-4 text-center">IMAGE</th>
+                  <th className="p-4 text-center">ITEM</th>
+                  <th className="p-4 text-center">CATEGORY</th>
+                  <th className="p-4 text-center">QUANTITY</th>
+                  <th className="p-4 text-center">EXPIRY</th>
+                  <th className="p-4 text-center">STATUS</th>
+                  <th className="p-4 text-center">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="bg-base-100">
                 {myItems.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-10 text-gray-500">
+                    <td colSpan="7" className="text-center py-10 text-gray-500">
                       No items added yet.{' '}
                       <Link to="/add-food" className="text-blue-500 hover:underline">Add your first item</Link>
                     </td>
                   </tr>
                 ) : (
                   myItems.map((item) => (
-                    <tr key={item._id} className="border-t hover:bg-base-300 transition">
-                      <td className="p-4 flex items-center gap-3">
+                    <tr key={item._id} className="border-t hover:bg-base-300 transition text-center">
+                      <td className="p-4">
                         <img
                           src={item.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png'}
-                          className="w-12 h-12 rounded-full object-cover shadow"
+                          className="w-12 h-12 rounded-full object-cover inline-block shadow"
                           alt={item.title}
                         />
-                        <div>
-                          <p className="font-semibold">{item.title}</p>
-                          <p className="text-xs text-gray-500">{item.description}</p>
-                        </div>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-semibold">{item.title}</p>
+                        <p className="text-xs text-gray-500">{item.description}</p>
                       </td>
                       <td className="p-4">{item.category}</td>
                       <td className="p-4">{item.quantity}</td>
-                      <td className="p-4">{item.expiryDate}</td>
-                      <td className="p-4">
+                      <td className="p-4 whitespace-nowrap">{item.expiryDate}</td>
+                      <td className="p-4 whitespace-nowrap">
                         <span className={`text-xs px-3 py-1 rounded-full shadow ${item.status.colorClass}`}>
                           {item.status.text}
                         </span>
                       </td>
-                      <td className="p-4 flex gap-2">
-                        <Link to={`/food/${item._id}`}>
-                          <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
-                            <Eye size={16} />
+                      <td className="p-4">
+                        <div className="flex justify-center gap-2">
+                          <Link to={`/food/${item._id}`}>
+                            <button className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
+                              <Eye size={16} />
+                            </button>
+                          </Link>
+                          <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
+                            <Pencil size={16} />
                           </button>
-                        </Link>
-                        <button onClick={() => handleEditClick(item)} className="bg-violet-500 hover:bg-violet-600 p-2 rounded-full text-white cursor-pointer">
-                          <Pencil size={16} />
-                        </button>
-                        <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white cursor-pointer">
-                          <Trash2 size={16} />
-                        </button>
+                          <button onClick={() => handleDelete(item._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-full text-white cursor-pointer">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -239,6 +242,7 @@ const MyItem = () => {
             </table>
           </div>
         </div>
+
 
         {/* Update Modal */}
         <dialog id="update_modal" className="modal">

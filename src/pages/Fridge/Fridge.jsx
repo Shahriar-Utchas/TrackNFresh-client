@@ -135,13 +135,13 @@ const Fridge = () => {
           <div className="ml-auto flex gap-2">
             <button
               onClick={() => setView("grid")}
-              className={`btn btn-sm ${view === "grid" ? "bg-base-300" : "btn-outline"}`}
+              className={`btn btn-sm ${view === "grid" ? "bg-base-300 btn-outline" : ""}`}
             >
               <Grid3X3 size={18} />
             </button>
             <button
               onClick={() => setView("table")}
-              className={`btn btn-sm ${view === "table" ? "bg-base-300" : "btn-outline"}`}
+              className={`btn btn-sm ${view === "table" ? "bg-base-300 btn-outline" : ""}`}
             >
               <List size={18} />
             </button>
@@ -215,10 +215,10 @@ const Fridge = () => {
                     <td className="font-medium">{item.title}</td>
                     <td>{item.category}</td>
                     <td>{item.quantity}</td>
-                    <td className="text-red-600">{formatDate(item.expiryDate)}</td>
+                    <td className="text-red-600 whitespace-nowrap">{formatDate(item.expiryDate)}</td>
                     <td>
                       <Link to={`/food/${item._id}`}>
-                        <button className="btn btn-sm">See Details</button>
+                        <button className="btn btn-sm whitespace-nowrap">See Details</button>
                       </Link>
                     </td>
                   </tr>

@@ -75,7 +75,7 @@ const Hero = () => {
                                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                                     {slide.title}
                                 </h1>
-                                <p className="text-lg md:text-xl text-emerald-600 mb-4 font-medium">{slide.subtitle}</p>
+                                <p className="px-2 md:px-0 text-lg md:text-xl text-emerald-600 mb-4 font-medium">{slide.subtitle}</p>
                                 <p className="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">{slide.description}</p>
                                 <div className="flex justify-center lg:justify-start">
                                     <button className="group inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-base md:text-lg shadow-lg hover:shadow-xl">

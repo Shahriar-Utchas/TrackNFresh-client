@@ -47,7 +47,7 @@ const FoodTips = () => {
                         </div>
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground">
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-foreground">
                         Food Safety Tips
                     </h1>
                 </div>
