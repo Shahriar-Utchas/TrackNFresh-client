@@ -75,7 +75,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>FreshNTrack | Login</title>
+        <title>TrackNFresh | Login</title>
       </Helmet>
       <div className="min-h-screen flex items-center justify-center bg-base-300 px-4">
         <div className="flex flex-col md:flex-row bg-base-100 shadow-2xl rounded-2xl overflow-hidden w-full max-w-4xl">

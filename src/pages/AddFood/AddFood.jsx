@@ -52,7 +52,7 @@ const AddFood = () => {
     return (
         <>
             <Helmet>
-                <title>FreshNTrack | Add Food</title>
+                <title>TrackNFresh | Add Food</title>
             </Helmet>
             <div className="min-h-screen flex items-center justify-center bg-base-300 p-8">
                 <div className="bg-base-100 p-8 rounded-xl shadow-md w-full max-w-xl">

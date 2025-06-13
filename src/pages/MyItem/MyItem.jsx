@@ -149,7 +149,7 @@ const MyItem = () => {
   return (
     <>
       <Helmet>
-        <title>FreshNTrack | My Item</title>
+        <title>TrackNFresh | My Item</title>
       </Helmet>
       <div className="p-6 bg-base-100 min-h-screen">
         <div className="text-center mb-8">

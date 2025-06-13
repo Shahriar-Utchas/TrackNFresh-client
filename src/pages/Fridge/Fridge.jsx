@@ -57,7 +57,7 @@ const Fridge = () => {
   return (
     <>
       <Helmet>
-        <title>FreshNTrack | Fridge</title>
+        <title>TrackNFresh | Fridge</title>
       </Helmet>
       <div className="p-6 text-base-content">
         <h1 className="text-3xl font-bold mb-1">My Fridge</h1>

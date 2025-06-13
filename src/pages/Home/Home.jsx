@@ -29,7 +29,7 @@ const Home = () => {
     return (
         <>
             <Helmet>
-                <title>FreshNTrack | Home</title>
+                <title>TrackNFresh | Home</title>
             </Helmet>
             <motion.div {...fadeInUp}>
                 <Hero />

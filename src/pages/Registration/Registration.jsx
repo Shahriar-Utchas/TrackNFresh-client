@@ -126,7 +126,7 @@ const Registration = () => {
     return (
         <>
             <Helmet>
-                <title>FreshNTrack | Registration</title>
+                <title>TrackNFresh | Registration</title>
             </Helmet>
             <div className="min-h-screen flex items-center justify-center bg-base-300 px-4">
                 <div className="flex flex-col md:flex-row-reverse bg-base-100 shadow-2xl rounded-2xl overflow-hidden w-full max-w-4xl m-5">

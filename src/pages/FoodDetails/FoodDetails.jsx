@@ -128,7 +128,7 @@ const FoodDetails = () => {
     return (
         <>
             <Helmet>
-                <title>FreshNTrack | Food Details</title>
+                <title>TrackNFresh | Food Details</title>
                 <meta name="description" content="The page you are looking for does not exist." />
             </Helmet>
             <div className="p-6 max-w-6xl mx-auto text-base-content">

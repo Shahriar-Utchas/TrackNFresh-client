@@ -8,7 +8,7 @@ const Error404 = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-base-100 text-center">
             <Helmet>
-                <title>FreshNTrack | 404</title>
+                <title>TrackNFresh | 404</title>
                 <meta name="description" content="The page you are looking for does not exist." />
             </Helmet>
             <div className="w-full h-[400px] max-w-md">
