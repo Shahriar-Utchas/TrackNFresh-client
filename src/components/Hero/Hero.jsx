@@ -21,7 +21,7 @@ const slides = [
         subtitle: "Intuitive categorization for easy access",
         description: "Transform your kitchen into a well-organized space with intuitive categorization.",
         cta: "Join Now",
-        image: "public/img/slide3.jpg"
+        image: "/img/slide3.jpg"
     }
 ];
 
