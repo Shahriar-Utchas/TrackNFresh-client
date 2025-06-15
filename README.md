@@ -3,8 +3,8 @@
 **TrackNFresh** is a web app for Food Expiry Tracker System that helps users manage their food inventory, track expiry dates, and minimize food waste. It provides features such as authentication, food management, expiry tracking, search, filter, pagination, and more — all within a modern and responsive interface.
 
 ## 🔗 Live Links
-### Client: [TrackNFresh Client](https://tracknfresh.vercel.app)
-### Server: [TrackNFresh server](https://track-n-fresh-server.vercel.app)
+### Frontend/Client: [TrackNFresh Client](https://tracknfresh.vercel.app)
+### Backend/Server: [TrackNFresh server](https://track-n-fresh-server.vercel.app)
 ---
 
 ## Features
@@ -17,7 +17,7 @@
 - Pagination on food list (Fridge page & expired item section)
 - Add notes to food (owner only)
 - Responsive design (mobile, tablet, desktop)
-- Framer Motion animations
+- Framer Motion/Lottie JSON-based animations
 - Custom 404 page and loading spinner
 
 ---
